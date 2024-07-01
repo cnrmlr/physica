@@ -13,7 +13,7 @@ In this simulator, hypergraphs evolve based on a set of rules inspired by comput
 ## Features
 
 - **Hypergraph Representation:** Implements a data structure to represent and manipulate hypergraphs.
-- **Configurable Scenarios:** (coming soon) Configurable initial conditions and evolution rules to demonstrate the simulator's capabilities to evaluate hypergraphs over time.
+- **Configuration Options:** (coming soon) Configurable initial conditions and transformation rules to demonstrate the simulator's capabilities to transform hypergraphs over time.
 - **Simulation Engine:** (coming soon) Provides mechanisms to simulate the evolution of hypergraphs over time according to a configured rule of evolution.
 - **Visualization Tools:** (coming soon) Includes tools for visualizing the generated hypergraphs and their dynamics.
 
