@@ -1,8 +1,8 @@
 [package]
-name = "HypergraphSimulator"
+name = "ComputationalPhysicsEngine"
 version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "hypergraph_simulator"
-path = ".\\src\\main.rs"
+name = "computational_physics_engine"
+path = ".//src//main.rs"

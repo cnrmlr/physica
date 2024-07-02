@@ -8,6 +8,10 @@ def main(build_type):
     # Define the root directory and build directory
     root_dir = os.path.dirname(os.path.abspath(__file__))
 
+    # Clean the project using Cargo
+    clean_command = ["cargo", "clean"]
+    subprocess.run(clean_command, cwd=root_dir)
+
     # Run the build process with Cargo
     build_command = ["cargo", "build"]
     
@@ -20,7 +24,7 @@ def main(build_type):
         return
 
     # Determine the executable name based on the platform
-    exe_name = "hypergraph_simulator"
+    exe_name = "computational_physics_engine"
     if platform.system() == "Windows":
         exe_name += ".exe"
 
