@@ -21,16 +21,67 @@ In this engine, hypergraphs evolve based on a set of rules inspired by computati
 
 ### Prerequisites
 
-- [Rust](https://www.rust-lang.org/) installed on your system to build the engine.
-- [Python](https://www.python.org/) for build and visualization scripts.
+- **Rust**: Installed on your system to build the engine.
+  - **Windows**:
+    - Download and run the installer from [rust-lang.org](https://www.rust-lang.org/).
+    - Follow the prompts in the installer.
+    - Optionally, ensure Rust is added to your PATH environment variable during installation.
+    - Verify installation by opening Command Prompt (`cmd`) and typing:
+      ```sh
+      rustc --version
+      ```
+  - **Unix-based Systems** (Linux, macOS):
+    - Open a terminal and run the following command:
+      ```sh
+      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+      ```
+    - Follow the prompts to customize the installation as needed, such as adding Rust to your PATH.
+    - Verify installation by reopening your terminal and typing:
+      ```sh
+      rustc --version
+      ```
 
-### Installation
+- **Python**: Required for build and visualization scripts.
+  - **Windows**:
+    - Download the installer from [python.org](https://www.python.org/).
+    - Run the installer and follow the prompts.
+    - Optionally, add Python to your PATH environment variable during installation.
+    - Verify installation by opening a new command prompt and typing:
+      ```sh
+      python --version
+      ```
+  - **Unix-based Systems** (Linux, macOS):
+    - Python usually comes pre-installed on most Unix-based systems. However, to install Python using a package manager:
+      - On Debian/Ubuntu:
+        ```sh
+        sudo apt-get update
+        sudo apt-get install python3
+        ```
+      - On macOS (using Homebrew):
+        ```sh
+        brew install python
+        ```
+    - Verify installation by opening a new terminal and typing:
+      ```sh
+      python --version
+      ```
 
-1. Clone the repository:
+
+### Setup/Run
+
+- **Clone the repository**:
    ```bash
-   git clone https://github.com/cnrmlr/hypergraph_simulator.git
+   git clone https://github.com/cnrmlr/computational_physics_engine.git
 
-
-2. From the root of the repository, run the following command:
-    ```bash
-    python build_and_run.py --build_type <build_type>
+- **Configure and run**:
+   - From the scripts directory, run the following commands to generate the engine's configuration file and run the engine:
+      - **Windows**: 
+      ```sh
+      python configure.py
+      python build_and_run.py --build_type release
+      ```
+      - **Unix-based Systems** (Linux, macOS):
+      ```sh
+      python3 configure.py
+      python3 build_and_run.py --build_type release
+      ```
