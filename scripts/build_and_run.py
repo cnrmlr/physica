@@ -5,8 +5,8 @@ import platform
 import argparse
 
 def main(build_type):
-    # Define the root directory and build directory
-    root_dir = os.path.dirname(os.path.abspath(__file__))
+    # Determine the root directory (one level up from the scripts directory)
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
     # Clean the project using Cargo
     clean_command = ["cargo", "clean"]

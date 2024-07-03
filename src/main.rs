@@ -1,11 +1,11 @@
 mod hyperedge;
 mod hypergraph;
-mod vertex;
+mod hypervertex;
 
 use hyperedge::Hyperedge;
 use hypergraph::Hypergraph;
+use hypervertex::Hypervertex;
 use std::rc::Rc;
-use vertex::Vertex;
 
 /// This is the main function of the program.
 /// It demonstrates the usage of the Graph, Vertex, and Edge structs.
@@ -16,9 +16,9 @@ fn main() {
 
     // Add some vertices
     // Create new Rc (Reference Counted) instances of Vertex with unique IDs.
-    let v1 = Rc::new(Vertex::new(1));
-    let v2 = Rc::new(Vertex::new(2));
-    let v3 = Rc::new(Vertex::new(3));
+    let v1 = Rc::new(Hypervertex::new(1));
+    let v2 = Rc::new(Hypervertex::new(2));
+    let v3 = Rc::new(Hypervertex::new(3));
 
     // Add vertices to the graph
     // Add a vector of Rc<Vertex> instances to the graph.

@@ -1,10 +1,10 @@
 use crate::hyperedge::Hyperedge;
-use crate::vertex::Vertex;
+use crate::hypervertex::Hypervertex;
 use std::collections::HashSet;
 use std::rc::Rc;
 
 pub struct Hypergraph {
-    pub vertices: HashSet<Rc<Vertex>>,
+    pub vertices: HashSet<Rc<Hypervertex>>,
     pub hyperedges: HashSet<Rc<Hyperedge>>,
 }
 
@@ -16,11 +16,11 @@ impl Hypergraph {
         }
     }
 
-    pub fn add_vertices(&mut self, vertices: Vec<Rc<Vertex>>) {
+    pub fn add_vertices(&mut self, vertices: Vec<Rc<Hypervertex>>) {
         self.vertices.extend(vertices.iter().cloned());
     }
 
-    pub fn get_vertices(&self) -> &HashSet<Rc<Vertex>> {
+    pub fn get_vertices(&self) -> &HashSet<Rc<Hypervertex>> {
         &self.vertices
     }
 

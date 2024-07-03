@@ -1,22 +1,22 @@
-use crate::vertex::Vertex;
+use crate::hypervertex::Hypervertex;
 use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 
 pub struct Hyperedge {
-    pub vertices: Vec<Rc<Vertex>>,
+    pub vertices: Vec<Rc<Hypervertex>>,
 }
 
 impl Hyperedge {
-    pub fn new(vertices: Vec<Rc<Vertex>>) -> Self {
+    pub fn new(vertices: Vec<Rc<Hypervertex>>) -> Self {
         Self { vertices }
     }
 
-    pub fn set_vertices(&mut self, vertices: Vec<Rc<Vertex>>) {
+    pub fn set_vertices(&mut self, vertices: Vec<Rc<Hypervertex>>) {
         self.vertices.clear();
         self.vertices.extend(vertices);
     }
 
-    pub fn has_vertex(&self, vertex: Rc<Vertex>) -> bool {
+    pub fn has_vertex(&self, vertex: Rc<Hypervertex>) -> bool {
         self.vertices.contains(&vertex)
     }
 
@@ -24,7 +24,7 @@ impl Hyperedge {
         self.vertices.len()
     }
 
-    pub fn get_vertices(&self) -> &Vec<Rc<Vertex>> {
+    pub fn get_vertices(&self) -> &Vec<Rc<Hypervertex>> {
         &self.vertices
     }
 }
