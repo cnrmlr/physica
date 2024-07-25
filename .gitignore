@@ -1,8 +1,2 @@
-debug/
-target/
-config/
-
-**/*.rs.bk
-*.pdb
-*.DS_Store
-*.tsv
+build/
+*.vscode

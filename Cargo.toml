@@ -1,8 +1,0 @@
-[package]
-name = "ComputationalPhysicsEngine"
-version = "0.1.0"
-edition = "2021"
-
-[[bin]]
-name = "computational_physics_engine"
-path = ".//src//main.rs"
