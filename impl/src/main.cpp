@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv)
 {
-   computational_physics_engine::Instance* engine = new computational_physics_engine::Instance();
+   cpe::Instance* engine = new cpe::Instance();
 
    engine->run();
 

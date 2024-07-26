@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace computational_physics_engine
+namespace cpe
 {
 namespace core
 {

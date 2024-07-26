@@ -1,67 +1,93 @@
 #include "hypergraph.h"
 
-namespace computational_physics_engine
+namespace cpe
 {
 namespace core
 {
 Hypergraph::Hypergraph()
-   : Identifiable()
+   : IdentifiableBase()
+   , vertices_(nullptr)
+   , edges_(nullptr)
 {
+   vertices_ = std::make_unique<std::vector<Hypervertex>>();
+   vertices_->reserve(10000);
+
+   edges_ = std::make_unique<std::vector<Hyperedge>>();
+   edges_->reserve(10000);
 }
 
 Hypergraph::~Hypergraph()
 {
 }
 
-void Hypergraph::setVertices(SharedVertexSet vertices)
+const RawVertexPtr Hypergraph::addVertex()
 {
-   vertices_ = vertices;
+   if (vertices_->size() < vertices_->capacity())
+   {
+      return &vertices_->emplace_back();
+   }
+   else
+   {
+      return nullptr;
+   }
 }
 
-SharedVertexSet Hypergraph::getVertices() const
+void Hypergraph::removeVertex(const RawVertexPtr vertex)
 {
-   return vertices_;
+   auto it = std::find(vertices_->begin(), vertices_->end(), *vertex);
+
+   if (it != vertices_->end())
+   {
+      vertices_->erase(it);
+   }
+
+   // @TODO: Need to automate the removal of the vertex from the edges its contain on
+   // before its removed from the graph.
 }
 
-void Hypergraph::clearVertices()
+const std::vector<RawVertexPtr> Hypergraph::addVertices(size_t count)
 {
-   vertices_.clear();
+   std::vector<RawVertexPtr> newVertices;
+   newVertices.reserve(count);
+
+   for (size_t i = 0; i < count; ++i)
+   {
+      newVertices.push_back(addVertex());
+   }
+
+   return newVertices;
 }
 
-void Hypergraph::addVertex(std::shared_ptr<Hypervertex> vertex)
+const RawEdgePtr Hypergraph::addEdge(const std::vector<RawVertexPtr>& incidentVertices)
 {
-   vertices_.insert(vertex);
+   if (edges_->size() < edges_->capacity())
+   {
+      return &edges_->emplace_back(incidentVertices);
+   }
+   else
+   {
+      return nullptr;
+   }
 }
 
-void Hypergraph::removeVertex(std::shared_ptr<Hypervertex> vertex)
+void Hypergraph::removeEdge(const RawEdgePtr edge)
 {
-   vertices_.erase(vertex);
+   auto it = std::find(edges_->begin(), edges_->end(), *edge);
+
+   if (it != edges_->end())
+   {
+      edges_->erase(it);
+   }
 }
 
-void Hypergraph::setEdges(SharedEdgeSet edges)
+const std::vector<Hypervertex>& Hypergraph::getVertices()
 {
-   edges_ = edges;
+   return *vertices_.get();
 }
 
-SharedEdgeSet Hypergraph::getEdges() const
+const std::vector<Hyperedge>& Hypergraph::getEdges()
 {
-   return edges_;
-}
-
-void Hypergraph::clearEdges()
-{
-   edges_.clear();
-}
-
-void Hypergraph::addEdge(std::shared_ptr<Hyperedge> edge)
-{
-   edges_.insert(edge);
-}
-
-void Hypergraph::removeEdge(std::shared_ptr<Hyperedge> edge)
-{
-   edges_.erase(edge);
+   return *edges_.get();
 }
 }
 }
-

@@ -1,13 +1,15 @@
 #include "hyperedge.h"
 #include "hypervertex.h"
 
-namespace computational_physics_engine
+namespace cpe
 {
 namespace core
 {
 Hyperedge::Hyperedge()
-   : Identifiable()
+   : IdentifiableBase()
+   , vertices_(0)
 {
+   vertices_.reserve(100);
 }
 
 Hyperedge::~Hyperedge()
@@ -15,63 +17,34 @@ Hyperedge::~Hyperedge()
 }
 
 Hyperedge::Hyperedge(const Hyperedge& rhs)
-   : core::Identifiable(rhs)
-   , endpoints_(rhs.endpoints_)
+   : core::IdentifiableBase(rhs)
+   , vertices_(rhs.vertices_)
 {
 }
 
-Hyperedge& Hyperedge::operator=(const Hyperedge& rhs)
+Hyperedge Hyperedge::operator=(const Hyperedge& rhs)
 {
    if (this != &rhs)
    {
-      core::Identifiable::operator=(rhs);
-      endpoints_ = rhs.endpoints_;
+      core::IdentifiableBase::operator=(rhs);
    }
    return *this;
 }
 
-Hyperedge::Hyperedge(SharedVertexSet tail, SharedVertexSet head)
+Hyperedge::Hyperedge(const std::vector<RawVertexPtr>& vertices)
+   : IdentifiableBase()
+   , vertices_(vertices)
 {
-   setEndpoints(tail, head);
 }
 
-void Hyperedge::setEndpoints(SharedVertexSet tail, SharedVertexSet head)
+bool Hyperedge::operator==(const Hyperedge& rhs)
 {
-   setTail(tail);
-   setHead(head);
+   return IdentifiableBase::operator==(rhs);
 }
 
-const std::pair<SharedVertexSet, SharedVertexSet> Hyperedge::getEndpoints() const
+const std::vector<RawVertexPtr>& Hyperedge::getVertices()
 {
-   return endpoints_;
-}
-
-void Hyperedge::setHead(SharedVertexSet head)
-{
-   endpoints_.second = head;
-}
-
-const SharedVertexSet Hyperedge::getHead() const
-{
-   return endpoints_.second;
-}
-
-void Hyperedge::setTail(SharedVertexSet tail)
-{
-   endpoints_.first = tail;
-}
-
-const SharedVertexSet Hyperedge::getTail() const
-{
-   return endpoints_.first;
-}
-
-void Hyperedge::AddThisEdgeToIncidenceLists(SharedVertexSet incidentVertices)
-{
-   for (auto& vertex : incidentVertices)
-   {
-      vertex->addIncidentEdge(shared_from_this());
-   }
+   return vertices_;
 }
 }
 }

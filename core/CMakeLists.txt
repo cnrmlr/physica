@@ -13,17 +13,17 @@ set(SOURCES
     src/hyperedge.cpp
     src/hypergraph.cpp
     src/hypervertex.cpp
-    src/identifiable.cpp
+    src/identifiable_base.cpp
     src/uuid.cpp
 )
 
 # Add header files
 set(HEADERS
-    include/hash.h
     include/hyperedge.h
     include/hypergraph.h
     include/hypervertex.h
-    include/identifiable.h
+    include/identifiable_base.h
+    include/type_defs.h
     include/uuid.h
 )
 

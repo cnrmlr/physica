@@ -2,17 +2,18 @@
 
 #include "hyperedge.h"
 #include "hypervertex.h"
-#include "identifiable.h"
+#include "identifiable_base.h"
+#include "type_defs.h"
 
 #include <utility>
 #include <memory>
 #include <unordered_set>
 
-namespace computational_physics_engine
+namespace cpe
 {
 namespace core
 {
-class Hypergraph : public core::Identifiable
+class Hypergraph : public IdentifiableBase
 {
 public:
    Hypergraph();
@@ -20,23 +21,20 @@ public:
    Hypergraph(const Hypergraph&) = delete;
    Hypergraph operator=(const Hypergraph) = delete;
 
-   void setVertices(SharedVertexSet vertices);
-   SharedVertexSet getVertices() const;
-   void clearVertices();
+   const RawVertexPtr addVertex();
+   void removeVertex(const RawVertexPtr vertex);
 
-   void addVertex(std::shared_ptr<Hypervertex> vertex);
-   void removeVertex(std::shared_ptr<Hypervertex> vertex);
+   const std::vector<RawVertexPtr> addVertices(size_t count);
 
-   void setEdges(SharedEdgeSet edges);
-   SharedEdgeSet getEdges() const;
-   void clearEdges();
+   const RawEdgePtr addEdge(const std::vector<RawVertexPtr>& incidentVertices);
+   void removeEdge(const RawEdgePtr edge);
 
-   void addEdge(std::shared_ptr<Hyperedge> edge);
-   void removeEdge(std::shared_ptr<Hyperedge> edge);
+   const std::vector<Hypervertex>& getVertices();
+   const std::vector<Hyperedge>& getEdges();
 
 private:
-   SharedVertexSet vertices_;
-   SharedEdgeSet edges_;
+   std::unique_ptr<std::vector<Hypervertex>> vertices_;
+   std::unique_ptr<std::vector<Hyperedge>> edges_;
 };
 }
 }

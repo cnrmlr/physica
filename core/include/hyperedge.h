@@ -1,42 +1,33 @@
 #pragma once
 
-#include "identifiable.h"
-#include "hash.h"
+#include "identifiable_base.h"
+#include "type_defs.h"
 
 #include <memory>
 #include <unordered_set>
 
-namespace computational_physics_engine
+namespace cpe
 {
 namespace core
 {
 class Hypervertex;
 
-using SharedVertexSet = std::unordered_set<std::shared_ptr<Hypervertex>>;
-
-class Hyperedge : public core::Identifiable, public std::enable_shared_from_this<Hyperedge>
+class Hyperedge : public IdentifiableBase
 {
 public:
    Hyperedge();
    ~Hyperedge();
-   Hyperedge(const Hyperedge&);
-   Hyperedge& operator=(const Hyperedge&);
+   Hyperedge(const Hyperedge& rhs);
+   Hyperedge operator=(const Hyperedge& rhs);
 
-   Hyperedge(SharedVertexSet tail, SharedVertexSet head);
+   Hyperedge(const std::vector<RawVertexPtr>& vertices);
 
-   void setEndpoints(SharedVertexSet tail, SharedVertexSet head);
-   const std::pair<SharedVertexSet, SharedVertexSet> getEndpoints() const;
+   bool operator==(const Hyperedge& rhs);
 
-   void setHead(SharedVertexSet head);
-   const SharedVertexSet getHead() const;
-
-   void setTail(SharedVertexSet tail);
-   const SharedVertexSet getTail() const;
+   const std::vector<RawVertexPtr>& getVertices();
 
 private:
-   std::pair<SharedVertexSet, SharedVertexSet> endpoints_;
-
-   void AddThisEdgeToIncidenceLists(SharedVertexSet incidentVertices);
+   std::vector<RawVertexPtr> vertices_;
 };
 }
 }

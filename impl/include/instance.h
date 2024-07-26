@@ -2,7 +2,7 @@
 
 #include "hypergraph.h" 
 
-namespace computational_physics_engine
+namespace cpe
 {
 class Instance
 {

@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 
-namespace computational_physics_engine
+namespace cpe
 {
 namespace core
 {

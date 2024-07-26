@@ -1,39 +1,29 @@
 #pragma once
 
-#include "identifiable.h"
-#include "hash.h"
+#include "identifiable_base.h"
 
 #include <unordered_set>
 #include <memory>
 
-namespace computational_physics_engine
+namespace cpe
 {
 namespace core
 {
-class Hyperedge;
-
-using SharedEdgeSet = std::unordered_set<std::shared_ptr<Hyperedge>>;
-
-class Hypervertex : public core::Identifiable
+class Hypervertex : public IdentifiableBase
 {
 public:
    Hypervertex();
    ~Hypervertex();
-   Hypervertex(const Hypervertex&);
-   Hypervertex& operator=(const Hypervertex&);
+   Hypervertex(const Hypervertex& rhs);
+   Hypervertex operator=(const Hypervertex& rhs);
 
-   Hypervertex(SharedEdgeSet incidentEdges);
-
-   void setIncidentEdges(SharedEdgeSet incidentEdges);
-   const SharedEdgeSet getIncidentEdges() const;
-
-   void addIncidentEdge(std::shared_ptr<Hyperedge> incidentEdge);
-   void removeIncidentEdge(std::shared_ptr<Hyperedge> incidentEdge);
-
-   void clearIncidentEdges();
+   bool operator==(const Hypervertex& rhs) const;
 
 private:
-   SharedEdgeSet incidentEdges_;
+   // empty
+
+protected:
+   // empty
 };
 }
 }
