@@ -15,6 +15,6 @@ public:
    void run();
 
 private:
-   core::Hypergraph hypergraph_;
+   core::elements::Hypergraph hypergraph_;
 };
 }

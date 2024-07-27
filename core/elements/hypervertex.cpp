@@ -4,6 +4,8 @@ namespace cpe
 {
 namespace core
 {
+namespace elements
+{
 Hypervertex::Hypervertex()
    : IdentifiableBase()
 {
@@ -14,7 +16,7 @@ Hypervertex::~Hypervertex()
 }
 
 Hypervertex::Hypervertex(const Hypervertex& rhs)
-   : core::IdentifiableBase(rhs)
+   : IdentifiableBase(rhs)
 {
 }
 
@@ -22,7 +24,7 @@ Hypervertex Hypervertex::operator=(const Hypervertex& rhs)
 {
    if (this != &rhs)
    {
-      core::IdentifiableBase::operator=(rhs);
+      IdentifiableBase::operator=(rhs);
    }
    return *this;
 }
@@ -30,6 +32,7 @@ Hypervertex Hypervertex::operator=(const Hypervertex& rhs)
 bool Hypervertex::operator==(const Hypervertex& rhs) const
 {
    return IdentifiableBase::operator==(rhs);
+}
 }
 }
 }

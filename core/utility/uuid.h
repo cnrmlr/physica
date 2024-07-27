@@ -6,6 +6,8 @@ namespace cpe
 {
 namespace core
 {
+namespace utility
+{
 class UUID
 {
 public:
@@ -32,5 +34,6 @@ private:
    bool ParseStringifiedUUID(const std::string& stringifiedUUID);
    void SetValues(const size_t mostSignificantBits, const size_t leastSignificantBits);
 };
+}
 }
 }

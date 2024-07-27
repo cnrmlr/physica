@@ -9,7 +9,9 @@ namespace cpe
 {
 namespace core
 {
-class Hypervertex : public IdentifiableBase
+namespace elements
+{
+class Hypervertex : public utility::IdentifiableBase
 {
 public:
    Hypervertex();
@@ -25,5 +27,6 @@ private:
 protected:
    // empty
 };
+}
 }
 }

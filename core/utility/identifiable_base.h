@@ -6,6 +6,8 @@ namespace cpe
 {
 namespace core
 {
+namespace utility
+{
 class IdentifiableBase
 {
 public:
@@ -20,5 +22,6 @@ public:
 protected:
    UUID uuid_;
 };
+}
 }
 }

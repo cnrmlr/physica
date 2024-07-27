@@ -4,6 +4,8 @@ namespace cpe
 {
 namespace core
 {
+namespace utility
+{
 IdentifiableBase::IdentifiableBase()
    : uuid_(UUID::Generate())
 {
@@ -35,6 +37,7 @@ bool IdentifiableBase::operator==(const IdentifiableBase& rhs) const
 UUID IdentifiableBase::getUUID() const
 {
    return uuid_;
+}
 }
 }
 }

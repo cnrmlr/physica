@@ -8,6 +8,8 @@ namespace cpe
 {
 namespace core
 {
+namespace utility
+{
 UUID::UUID()
    : mostSignificantBits_(0), leastSignificantBits_(0)
 {
@@ -130,6 +132,7 @@ bool UUID::ParseStringifiedUUID(const std::string& stringUUID)
    {
       return false;
    }
+}
 }
 }
 }

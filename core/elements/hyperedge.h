@@ -10,9 +10,11 @@ namespace cpe
 {
 namespace core
 {
+namespace elements
+{
 class Hypervertex;
 
-class Hyperedge : public IdentifiableBase
+class Hyperedge : public utility::IdentifiableBase
 {
 public:
    Hyperedge();
@@ -20,14 +22,15 @@ public:
    Hyperedge(const Hyperedge& rhs);
    Hyperedge operator=(const Hyperedge& rhs);
 
-   Hyperedge(const std::vector<RawVertexPtr>& vertices);
+   Hyperedge(const std::vector<VertexPtr>& vertices);
 
    bool operator==(const Hyperedge& rhs);
 
-   const std::vector<RawVertexPtr>& getVertices();
+   const std::vector<VertexPtr>& getVertices();
 
 private:
-   std::vector<RawVertexPtr> vertices_;
+   std::vector<VertexPtr> vertices_;
 };
+}
 }
 }

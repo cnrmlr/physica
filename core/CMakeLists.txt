@@ -1,34 +1,45 @@
-# core/CMakeLists.txt
+cmake_minimum_required(VERSION 3.10)
+
 project(Core)
 
-# Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Include directories
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-# Add source files
-set(SOURCES
-    src/hyperedge.cpp
-    src/hypergraph.cpp
-    src/hypervertex.cpp
-    src/identifiable_base.cpp
-    src/uuid.cpp
+set(ELEMENTS_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/elements/hyperedge.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypergraph.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypervertex.cpp
 )
 
-# Add header files
-set(HEADERS
-    include/hyperedge.h
-    include/hypergraph.h
-    include/hypervertex.h
-    include/identifiable_base.h
-    include/type_defs.h
-    include/uuid.h
+set(UTILITY_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/utility/identifiable_base.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utility/uuid.cpp
 )
 
-# Create static library
+set(ELEMENTS_HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/elements/hyperedge.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypergraph.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypervertex.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/utility/type_defs.h
+)
+
+set(UTILITY_HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/utility/identifiable_base.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/utility/memory_pool.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/utility/uuid.h
+)
+
+source_group("Elements\\Source Files" FILES ${ELEMENTS_SOURCES})
+source_group("Elements\\Header Files" FILES ${ELEMENTS_HEADERS})
+source_group("Utility\\Source Files" FILES ${UTILITY_SOURCES})
+source_group("Utility\\Header Files" FILES ${UTILITY_HEADERS})
+
+set(SOURCES ${ELEMENTS_SOURCES} ${UTILITY_SOURCES})
+set(HEADERS ${ELEMENTS_HEADERS} ${UTILITY_HEADERS})
+
 add_library(Core STATIC ${SOURCES} ${HEADERS})
 
-# Make the include directory available to other projects
-target_include_directories(Core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(Core PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/elements>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/utility>
+)
