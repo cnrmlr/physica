@@ -1,4 +1,8 @@
+#include "common_utility.h"
+#include "hyperedge.h"
 #include "hypervertex.h"
+
+#include <algorithm>
 
 namespace cpe
 {
@@ -15,23 +19,52 @@ Hypervertex::~Hypervertex()
 {
 }
 
-Hypervertex::Hypervertex(const Hypervertex& rhs)
-   : IdentifiableBase(rhs)
+const std::vector<std::weak_ptr<Hyperedge>> Hypervertex::getIncidentEdges()
 {
+   return utility::MakeWeakPtrVector(incidentEdges_);
 }
 
-Hypervertex Hypervertex::operator=(const Hypervertex& rhs)
+bool Hypervertex::isAdjacentTo(const std::weak_ptr<Hypervertex>& vertex)
 {
-   if (this != &rhs)
+   for (auto& edge : incidentEdges_)
    {
-      IdentifiableBase::operator=(rhs);
+      if (edge->isIncidentTo(vertex))
+      {
+         return true;
+      }
    }
-   return *this;
+
+   return false;
+}
+
+bool Hypervertex::isIncidentTo(const std::weak_ptr<Hyperedge>& edge)
+{
+   return utility::FindWithWeakPtr(incidentEdges_, edge) != incidentEdges_.end();
+}
+
+void Hypervertex::addIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
+{
+   incidentEdges_.emplace_back(incidentEdge);
+}
+
+void Hypervertex::removeIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
+{
+   auto edgeIter = utility::FindWithWeakPtr(incidentEdges_, incidentEdge);
+
+   if (edgeIter != incidentEdges_.end())
+   {
+      incidentEdges_.erase(edgeIter);
+   }
 }
 
 bool Hypervertex::operator==(const Hypervertex& rhs) const
 {
    return IdentifiableBase::operator==(rhs);
+}
+
+bool Hypervertex::operator!=(const Hypervertex& rhs) const
+{
+   return IdentifiableBase::operator!=(rhs);
 }
 }
 }

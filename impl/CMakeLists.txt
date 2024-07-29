@@ -7,11 +7,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SOURCES
     main.cpp
-    instance.cpp
+    computational_physics_engine.cpp
 )
 
 set(HEADERS
-    instance.h
+    computational_physics_engine.h
 )
 
 add_executable(Impl ${SOURCES} ${HEADERS})

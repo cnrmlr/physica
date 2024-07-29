@@ -9,6 +9,80 @@ namespace core
 {
 namespace utility
 {
+
+template <typename T, size_t BlockSize>
+class MemoryPool;
+
+template <typename T>
+class Ptr
+{
+public:
+   using pointer = T*;
+   using reference = T&;
+   using difference_type = std::ptrdiff_t;
+   using iterator_category = std::forward_iterator_tag;
+
+   Ptr() 
+      : ptr_(nullptr)
+      , start_(nullptr)
+      , end_(nullptr) 
+   {
+   }
+
+   Ptr(pointer ptr, pointer start, pointer end)
+      : ptr_(ptr)
+      , start_(start)
+      , end_(end) 
+   {
+   }
+
+   Ptr& operator++()
+   {
+      if (ptr_ < end_)
+      {
+         ++ptr_;
+      }
+      return *this;
+   }
+
+   Ptr operator++(int)
+   {
+      Ptr tmp = *this;
+      ++(*this);
+      return tmp;
+   }
+
+   reference operator*() const
+   {
+      return *ptr_;
+   }
+
+   pointer operator->() const
+   {
+      return ptr_;
+   }
+
+   bool operator==(const Ptr& other) const
+   {
+      return ptr_ == other.ptr_;
+   }
+
+   bool operator!=(const Ptr& other) const
+   {
+      return !(*this == other);
+   }
+
+   bool isValid() const
+   {
+      return ptr_ >= start_ && ptr_ < end_;
+   }
+
+private:
+   pointer ptr_;
+   pointer start_;
+   pointer end_;
+};
+
 template <typename T, size_t BlockSize = 4096>
 class MemoryPool
 {
@@ -37,7 +111,7 @@ public:
       freeSlots_ = nullptr;
    }
 
-   MemoryPool(const MemoryPool& memoryPool) noexcept 
+   MemoryPool(const MemoryPool& memoryPool) noexcept
       : MemoryPool()
    {
    }
@@ -48,11 +122,11 @@ public:
       memoryPool.currentBlock_ = nullptr;
       currentSlot_ = memoryPool.currentSlot_;
       lastSlot_ = memoryPool.lastSlot_;
-      freeSlots_ = memoryPool.freeSlots;
+      freeSlots_ = memoryPool.freeSlots_;
    }
 
    template<class U>
-   MemoryPool(const MemoryPool<U>& memoryPool) noexcept 
+   MemoryPool(const MemoryPool<U>& memoryPool) noexcept
       : MemoryPool()
    {
    }
@@ -61,7 +135,7 @@ public:
    {
       slot_pointer_ curr = currentBlock_;
 
-      while (curr != nullptr) 
+      while (curr != nullptr)
       {
          slot_pointer_ prev = curr->next;
          operator delete(reinterpret_cast<void*>(curr));
@@ -78,7 +152,7 @@ public:
          std::swap(currentBlock_, memoryPool.currentBlock_);
          currentSlot_ = memoryPool.currentSlot_;
          lastSlot_ = memoryPool.lastSlot_;
-         freeSlots_ = memoryPool.freeSlots;
+         freeSlots_ = memoryPool.freeSlots_;
       }
 
       return *this;
@@ -94,16 +168,15 @@ public:
       return &x;
    }
 
-   // Can only allocate one object at a time. n and hint are ignored
    inline pointer allocate(size_type n = 1, const_pointer hint = 0)
    {
-      if (freeSlots_ != nullptr) 
+      if (freeSlots_ != nullptr)
       {
          pointer result = reinterpret_cast<pointer>(freeSlots_);
          freeSlots_ = freeSlots_->next;
          return result;
       }
-      else 
+      else
       {
          if (currentSlot_ >= lastSlot_)
          {
@@ -116,11 +189,16 @@ public:
 
    inline void deallocate(pointer p, size_type n = 1)
    {
-      if (p != nullptr) 
+      if (p != nullptr)
       {
          reinterpret_cast<slot_pointer_>(p)->next = freeSlots_;
          freeSlots_ = reinterpret_cast<slot_pointer_>(p);
       }
+   }
+
+   inline void deallocate(Ptr<T> p)
+   {
+      deallocate(p.operator->());
    }
 
    inline size_type max_size() const noexcept
@@ -128,7 +206,6 @@ public:
       size_type maxBlocks = -1 / BlockSize;
       return (BlockSize - sizeof(data_pointer_)) / sizeof(slot_type_) * maxBlocks;
    }
-
 
    template <class U, class... Args>
    inline void construct(U* p, Args&&... args)
@@ -150,12 +227,28 @@ public:
       return result;
    }
 
+   template <class... Args>
+   inline Ptr<T> put(Args&&... args)
+   {
+      return Ptr<T>(newElement(std::forward<Args>(args)...), reinterpret_cast<pointer>(currentBlock_), reinterpret_cast<pointer>(lastSlot_));
+   }
+
    inline void deleteElement(pointer p)
    {
       if (p != nullptr) {
          p->~value_type();
          deallocate(p);
       }
+   }
+
+   inline void deleteElement(Ptr<T> p)
+   {
+      deleteElement(p.operator->());
+   }
+
+   Ptr<T> begin() const
+   {
+      return Ptr<T>(reinterpret_cast<pointer>(currentBlock_), reinterpret_cast<pointer>(currentBlock_), reinterpret_cast<pointer>(lastSlot_));
    }
 
 private:
@@ -189,7 +282,7 @@ private:
          (operator new(BlockSize));
       reinterpret_cast<slot_pointer_>(newBlock)->next = currentBlock_;
       currentBlock_ = reinterpret_cast<slot_pointer_>(newBlock);
-      // Pad block body to staisfy the alignment requirements for elements
+      // Pad block body to satisfy the alignment requirements for elements
       data_pointer_ body = newBlock + sizeof(slot_pointer_);
       size_type bodyPadding = padPointer(body, alignof(slot_type_));
       currentSlot_ = reinterpret_cast<slot_pointer_>(body + bodyPadding);

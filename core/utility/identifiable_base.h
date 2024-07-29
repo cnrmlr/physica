@@ -13,11 +13,13 @@ class IdentifiableBase
 public:
    IdentifiableBase();
    virtual ~IdentifiableBase();
-   IdentifiableBase(const IdentifiableBase& rhs);
-   IdentifiableBase& operator=(const IdentifiableBase& rhs);
+   IdentifiableBase(const IdentifiableBase& rhs) = delete;
+   IdentifiableBase& operator=(const IdentifiableBase& rhs) = delete;
 
    bool operator==(const IdentifiableBase& rhs) const;
-   UUID getUUID() const;
+   bool operator!=(const IdentifiableBase& rhs) const;
+
+   const UUID getUUID() const;
 
 protected:
    UUID uuid_;

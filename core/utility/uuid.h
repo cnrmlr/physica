@@ -21,11 +21,12 @@ public:
 
    const size_t getMSB() const;
    const size_t getLSB() const;
-   std::string toString() const;
+   const std::string toString() const;
 
    static const UUID Generate();
 
    bool operator==(const UUID& rhs) const;
+   bool operator!=(const UUID& rhs) const;
 
 private:
    size_t mostSignificantBits_;

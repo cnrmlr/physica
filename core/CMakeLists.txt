@@ -20,12 +20,11 @@ set(ELEMENTS_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/elements/hyperedge.h
     ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypergraph.h
     ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypervertex.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/utility/type_defs.h
 )
 
 set(UTILITY_HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/utility/common_utility.h
     ${CMAKE_CURRENT_SOURCE_DIR}/utility/identifiable_base.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/utility/memory_pool.h
     ${CMAKE_CURRENT_SOURCE_DIR}/utility/uuid.h
 )
 

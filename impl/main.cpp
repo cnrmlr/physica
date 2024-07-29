@@ -1,12 +1,6 @@
-#include "instance.h"
+#include "computational_physics_engine.h"
 
 int main(int argc, char **argv)
 {
-   cpe::Instance* engine = new cpe::Instance();
-
-   engine->run();
-
-   delete engine;
-
-   return 0;
+   return cpe::Run();
 }

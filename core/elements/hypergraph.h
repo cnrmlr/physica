@@ -1,14 +1,9 @@
 #pragma once
 
-#include "hyperedge.h"
-#include "hypervertex.h"
 #include "identifiable_base.h"
-#include "type_defs.h"
-#include "memory_pool.h"
 
-#include <utility>
 #include <memory>
-#include <unordered_set>
+#include <vector>
 
 namespace cpe
 {
@@ -16,6 +11,9 @@ namespace core
 {
 namespace elements
 {
+class Hyperedge;
+class Hypervertex;
+
 class Hypergraph : public utility::IdentifiableBase
 {
 public:
@@ -24,20 +22,24 @@ public:
    Hypergraph(const Hypergraph&) = delete;
    Hypergraph operator=(const Hypergraph) = delete;
 
-   const_VertexPtr addVertex();
-   void removeVertex(const_VertexPtr vertex);
+   const std::weak_ptr<Hypervertex> addVertex();
+   void removeVertex(const std::weak_ptr<Hypervertex>& vertex);
 
-   const std::vector<VertexPtr> addVertices(size_t count);
+   const std::vector<std::weak_ptr<Hypervertex>> addVertices(const size_t count);
+   void removeVertices(const std::vector<std::weak_ptr<Hypervertex>>& vertices);
 
-   const_EdgePtr addEdge(const std::vector<VertexPtr>& incidentVertices);
-   void removeEdge(const_EdgePtr edge);
+   const std::weak_ptr<Hyperedge> addEdge(std::vector<std::weak_ptr<Hypervertex>> vertices);
+   void removeEdge(const std::weak_ptr<Hyperedge>& edge);
 
-   const utility::MemoryPool<Hypervertex>& getVertices();
-   const utility::MemoryPool<Hyperedge>& getEdges();
+   const std::vector<std::weak_ptr<Hyperedge>> addEdges(std::vector<std::vector<std::weak_ptr<Hypervertex>>> vertexSets);
+   void removeEdges(const std::vector<std::weak_ptr<Hyperedge>>& edges);
+
+   const std::vector<std::weak_ptr<Hypervertex>> getVertices() const;
+   const std::vector<std::weak_ptr<Hyperedge>> getEdges() const;
 
 private:
-   utility::MemoryPool<Hypervertex> vertices_;
-   utility::MemoryPool<Hyperedge> edges_;
+   std::vector<std::shared_ptr<Hypervertex>> vertices_;
+   std::vector<std::shared_ptr<Hyperedge>> edges_;
 };
 }
 }

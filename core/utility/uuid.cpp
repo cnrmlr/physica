@@ -1,8 +1,9 @@
 #include "uuid.h"
-#include <random>
+
 #include <iomanip>
-#include <sstream>
 #include <iostream>
+#include <random>
+#include <sstream>
 
 namespace cpe
 {
@@ -11,7 +12,8 @@ namespace core
 namespace utility
 {
 UUID::UUID()
-   : mostSignificantBits_(0), leastSignificantBits_(0)
+   : mostSignificantBits_(0)
+   , leastSignificantBits_(0)
 {
 }
 
@@ -69,10 +71,15 @@ const UUID UUID::Generate()
 
 bool UUID::operator==(const UUID& rhs) const
 {
-   return mostSignificantBits_ == rhs.mostSignificantBits_ && leastSignificantBits_ == rhs.leastSignificantBits_;
+   return (mostSignificantBits_ == rhs.mostSignificantBits_) && (leastSignificantBits_ == rhs.leastSignificantBits_);
 }
 
-std::string UUID::toString() const
+bool UUID::operator!=(const UUID& rhs) const
+{
+    return (mostSignificantBits_ != rhs.mostSignificantBits_) || (leastSignificantBits_ != rhs.leastSignificantBits_);
+}
+
+const std::string UUID::toString() const
 {
    std::stringstream l_ss;
    l_ss << std::hex << std::setw(8) << std::setfill('0') << (mostSignificantBits_ >> 32)

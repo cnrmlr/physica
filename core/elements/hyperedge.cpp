@@ -1,5 +1,7 @@
+#include "common_utility.h"
 #include "hyperedge.h"
 #include "hypervertex.h"
+#include "identifiable_base.h"
 
 namespace cpe
 {
@@ -11,44 +13,78 @@ Hyperedge::Hyperedge()
    : IdentifiableBase()
    , vertices_(0)
 {
-   vertices_.reserve(100);
+}
+
+Hyperedge::Hyperedge(const std::vector<std::shared_ptr<Hypervertex>>& vertices)
+   : IdentifiableBase()
+{
+   vertices_.reserve(vertices.size());
+
+   for (auto& vertex : vertices)
+   {
+      vertices_.push_back(vertex);
+   }
 }
 
 Hyperedge::~Hyperedge()
 {
 }
 
-Hyperedge::Hyperedge(const Hyperedge& rhs)
-   : IdentifiableBase(rhs)
-   , vertices_(rhs.vertices_)
+const std::vector<std::weak_ptr<Hypervertex>> Hyperedge::getVertices() const
 {
+   return utility::MakeWeakPtrVector(vertices_);
 }
 
-Hyperedge Hyperedge::operator=(const Hyperedge& rhs)
+bool Hyperedge::isAdjacentTo(const std::weak_ptr<Hyperedge>& edge)
 {
-   if (this != &rhs)
+   for (auto& vertex : vertices_)
    {
-      IdentifiableBase::operator=(rhs);
+      if (edge.lock() && edge.lock()->isIncidentTo(vertex))
+      {
+         return true;
+      }
    }
-   return *this;
+
+   return false;
 }
 
-Hyperedge::Hyperedge(const std::vector<VertexPtr>& vertices)
-   : IdentifiableBase()
-   , vertices_(vertices)
+bool Hyperedge::isIncidentTo(const std::weak_ptr<Hypervertex>& vertex)
 {
+   return findVertex(vertex) != vertices_.end();
 }
 
-bool Hyperedge::operator==(const Hyperedge& rhs)
+const std::vector<std::shared_ptr<Hypervertex>>::iterator Hyperedge::findVertex(std::weak_ptr<Hypervertex> vertex)
+{
+   return utility::FindWithWeakPtr(vertices_, vertex);
+}
+
+void Hyperedge::removeVertex(std::weak_ptr<Hypervertex> vertex)
+{
+   auto vertexIter = findVertex(vertex);
+   
+   if (vertexIter != vertices_.end())
+   {
+      vertices_.erase(findVertex(vertex));
+   }
+}
+
+void Hyperedge::removeFromVertexIncidenceLists()
+{
+   for (auto& vertex : vertices_)
+   {
+      vertex->removeIncidentEdge(shared_from_this());
+   }
+}
+
+bool Hyperedge::operator==(const Hyperedge& rhs) const
 {
    return IdentifiableBase::operator==(rhs);
 }
 
-const std::vector<VertexPtr>& Hyperedge::getVertices()
+bool Hyperedge::operator!=(const Hyperedge& rhs) const
 {
-   return vertices_;
+   return IdentifiableBase::operator!=(rhs);
 }
 }
-
 }
 }
