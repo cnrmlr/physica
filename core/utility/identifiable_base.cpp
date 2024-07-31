@@ -1,6 +1,6 @@
 #include "identifiable_base.h"
 
-namespace cpe
+namespace graphica
 {
 namespace core
 {

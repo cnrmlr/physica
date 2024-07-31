@@ -1,9 +1,9 @@
 #include "common_utility.h"
 #include "hyperedge.h"
-#include "hypervertex.h"
+#include "vertex.h"
 #include "identifiable_base.h"
 
-namespace cpe
+namespace graphica
 {
 namespace core
 {
@@ -15,7 +15,7 @@ Hyperedge::Hyperedge()
 {
 }
 
-Hyperedge::Hyperedge(const std::vector<std::shared_ptr<Hypervertex>>& vertices)
+Hyperedge::Hyperedge(const std::vector<std::shared_ptr<Vertex>>& vertices)
    : IdentifiableBase()
 {
    vertices_.reserve(vertices.size());
@@ -30,7 +30,7 @@ Hyperedge::~Hyperedge()
 {
 }
 
-const std::vector<std::weak_ptr<Hypervertex>> Hyperedge::getVertices() const
+const std::vector<std::weak_ptr<Vertex>> Hyperedge::getVertices() const
 {
    return utility::MakeWeakPtrVector(vertices_);
 }
@@ -48,17 +48,17 @@ bool Hyperedge::isAdjacentTo(const std::weak_ptr<Hyperedge>& edge)
    return false;
 }
 
-bool Hyperedge::isIncidentTo(const std::weak_ptr<Hypervertex>& vertex)
+bool Hyperedge::isIncidentTo(const std::weak_ptr<Vertex>& vertex)
 {
    return findVertex(vertex) != vertices_.end();
 }
 
-const std::vector<std::shared_ptr<Hypervertex>>::iterator Hyperedge::findVertex(std::weak_ptr<Hypervertex> vertex)
+const std::vector<std::shared_ptr<Vertex>>::iterator Hyperedge::findVertex(std::weak_ptr<Vertex> vertex)
 {
    return utility::FindWithWeakPtr(vertices_, vertex);
 }
 
-void Hyperedge::removeVertex(std::weak_ptr<Hypervertex> vertex)
+void Hyperedge::removeVertex(std::weak_ptr<Vertex> vertex)
 {
    auto vertexIter = findVertex(vertex);
    

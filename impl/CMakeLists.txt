@@ -7,11 +7,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SOURCES
     main.cpp
-    computational_physics_engine.cpp
+    graphica.cpp
 )
 
 set(HEADERS
-    computational_physics_engine.h
+    graphica.h
 )
 
 add_executable(Impl ${SOURCES} ${HEADERS})

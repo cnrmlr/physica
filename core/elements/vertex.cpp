@@ -1,30 +1,30 @@
 #include "common_utility.h"
 #include "hyperedge.h"
-#include "hypervertex.h"
+#include "vertex.h"
 
 #include <algorithm>
 
-namespace cpe
+namespace graphica
 {
 namespace core
 {
 namespace elements
 {
-Hypervertex::Hypervertex()
+Vertex::Vertex()
    : IdentifiableBase()
 {
 }
 
-Hypervertex::~Hypervertex()
+Vertex::~Vertex()
 {
 }
 
-const std::vector<std::weak_ptr<Hyperedge>> Hypervertex::getIncidentEdges()
+const std::vector<std::weak_ptr<Hyperedge>> Vertex::getIncidentEdges()
 {
    return utility::MakeWeakPtrVector(incidentEdges_);
 }
 
-bool Hypervertex::isAdjacentTo(const std::weak_ptr<Hypervertex>& vertex)
+bool Vertex::isAdjacentTo(const std::weak_ptr<Vertex>& vertex)
 {
    for (auto& edge : incidentEdges_)
    {
@@ -37,17 +37,17 @@ bool Hypervertex::isAdjacentTo(const std::weak_ptr<Hypervertex>& vertex)
    return false;
 }
 
-bool Hypervertex::isIncidentTo(const std::weak_ptr<Hyperedge>& edge)
+bool Vertex::isIncidentTo(const std::weak_ptr<Hyperedge>& edge)
 {
    return utility::FindWithWeakPtr(incidentEdges_, edge) != incidentEdges_.end();
 }
 
-void Hypervertex::addIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
+void Vertex::addIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
 {
    incidentEdges_.emplace_back(incidentEdge);
 }
 
-void Hypervertex::removeIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
+void Vertex::removeIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
 {
    auto edgeIter = utility::FindWithWeakPtr(incidentEdges_, incidentEdge);
 
@@ -57,12 +57,12 @@ void Hypervertex::removeIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdg
    }
 }
 
-bool Hypervertex::operator==(const Hypervertex& rhs) const
+bool Vertex::operator==(const Vertex& rhs) const
 {
    return IdentifiableBase::operator==(rhs);
 }
 
-bool Hypervertex::operator!=(const Hypervertex& rhs) const
+bool Vertex::operator!=(const Vertex& rhs) const
 {
    return IdentifiableBase::operator!=(rhs);
 }

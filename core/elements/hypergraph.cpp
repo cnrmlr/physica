@@ -1,9 +1,9 @@
 #include "common_utility.h"
 #include "hyperedge.h"
 #include "hypergraph.h"
-#include "hypervertex.h"
+#include "vertex.h"
 
-namespace cpe
+namespace graphica
 {
 namespace core
 {
@@ -18,13 +18,13 @@ Hypergraph::~Hypergraph()
 {
 }
 
-const std::weak_ptr<Hypervertex> Hypergraph::addVertex()
+const std::weak_ptr<Vertex> Hypergraph::addVertex()
 {
-   std::shared_ptr<Hypervertex> vertex = std::make_shared<Hypervertex>();
+   std::shared_ptr<Vertex> vertex = std::make_shared<Vertex>();
    return vertices_.emplace_back(vertex);
 }
 
-void Hypergraph::removeVertex(const std::weak_ptr<Hypervertex>& vertex)
+void Hypergraph::removeVertex(const std::weak_ptr<Vertex>& vertex)
 {
    // remove the vertex from the edges it exists on
    for (auto& edge : edges_)
@@ -41,9 +41,9 @@ void Hypergraph::removeVertex(const std::weak_ptr<Hypervertex>& vertex)
    }
 }
 
-const std::vector<std::weak_ptr<Hypervertex>> Hypergraph::addVertices(size_t count)
+const std::vector<std::weak_ptr<Vertex>> Hypergraph::addVertices(size_t count)
 {
-   std::vector<std::weak_ptr<Hypervertex>> newVertices;
+   std::vector<std::weak_ptr<Vertex>> newVertices;
    newVertices.reserve(count);
 
    for (size_t i = 0; i < count; ++i)
@@ -54,7 +54,7 @@ const std::vector<std::weak_ptr<Hypervertex>> Hypergraph::addVertices(size_t cou
    return newVertices;
 }
 
-void Hypergraph::removeVertices(const std::vector<std::weak_ptr<Hypervertex>>& vertices)
+void Hypergraph::removeVertices(const std::vector<std::weak_ptr<Vertex>>& vertices)
 {
    for (auto& vertex : vertices)
    {
@@ -62,9 +62,9 @@ void Hypergraph::removeVertices(const std::vector<std::weak_ptr<Hypervertex>>& v
    }
 }
 
-const std::weak_ptr<Hyperedge> Hypergraph::addEdge(std::vector<std::weak_ptr<Hypervertex>> vertices)
+const std::weak_ptr<Hyperedge> Hypergraph::addEdge(std::vector<std::weak_ptr<Vertex>> vertices)
 {
-   std::vector<std::shared_ptr<Hypervertex>> sharedVertices = utility::MakeSharedPtrVector(vertices);
+   std::vector<std::shared_ptr<Vertex>> sharedVertices = utility::MakeSharedPtrVector(vertices);
 
    // return nullptr if there was an issue doing the conversion
    if (sharedVertices.empty())
@@ -96,7 +96,7 @@ void Hypergraph::removeEdge(const std::weak_ptr<Hyperedge>& edge)
    }
 }
 
-const std::vector<std::weak_ptr<Hyperedge>> Hypergraph::addEdges(std::vector<std::vector<std::weak_ptr<Hypervertex>>> vertexSets)
+const std::vector<std::weak_ptr<Hyperedge>> Hypergraph::addEdges(std::vector<std::vector<std::weak_ptr<Vertex>>> vertexSets)
 {
    std::vector<std::weak_ptr<Hyperedge>> newEdges;
    newEdges.reserve(vertexSets.size());
@@ -117,7 +117,7 @@ void Hypergraph::removeEdges(const std::vector<std::weak_ptr<Hyperedge>>& edges)
    }
 }
 
-const std::vector<std::weak_ptr<Hypervertex>> Hypergraph::getVertices() const
+const std::vector<std::weak_ptr<Vertex>> Hypergraph::getVertices() const
 {
    return utility::MakeWeakPtrVector(vertices_);
 }

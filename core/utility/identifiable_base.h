@@ -2,7 +2,7 @@
 
 #include "uuid.h"
 
-namespace cpe
+namespace graphica
 {
 namespace core
 {

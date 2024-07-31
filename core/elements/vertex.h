@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-namespace cpe
+namespace graphica
 {
 namespace core
 {
@@ -13,24 +13,24 @@ namespace elements
 {
 class Hyperedge;
 
-class Hypervertex : public utility::IdentifiableBase
+class Vertex : public utility::IdentifiableBase
 {
   friend class Hyperedge;
   friend class Hypergraph;
 
 public:
-   Hypervertex();
-   ~Hypervertex();
-   Hypervertex(const Hypervertex& rhs) = delete;
-   Hypervertex operator=(const Hypervertex& rhs) = delete;
+   Vertex();
+   ~Vertex();
+   Vertex(const Vertex& rhs) = delete;
+   Vertex operator=(const Vertex& rhs) = delete;
 
    const std::vector<std::weak_ptr<Hyperedge>> getIncidentEdges();
 
-   bool isAdjacentTo(const std::weak_ptr<Hypervertex>& vertex);
+   bool isAdjacentTo(const std::weak_ptr<Vertex>& vertex);
    bool isIncidentTo(const std::weak_ptr<Hyperedge>& edge);
 
-   bool operator==(const Hypervertex& rhs) const;
-   bool operator!=(const Hypervertex& rhs) const;
+   bool operator==(const Vertex& rhs) const;
+   bool operator!=(const Vertex& rhs) const;
 
 protected:
    void addIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge);

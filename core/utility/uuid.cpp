@@ -5,7 +5,7 @@
 #include <random>
 #include <sstream>
 
-namespace cpe
+namespace graphica
 {
 namespace core
 {

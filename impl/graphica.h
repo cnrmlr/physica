@@ -1,6 +1,6 @@
 #pragma once
 
-namespace cpe
+namespace graphica
 {
 int Run();
 }

@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(ELEMENTS_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/elements/hyperedge.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypergraph.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypervertex.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/elements/vertex.cpp
 )
 
 set(UTILITY_SOURCES
@@ -19,7 +19,7 @@ set(UTILITY_SOURCES
 set(ELEMENTS_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/elements/hyperedge.h
     ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypergraph.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/elements/hypervertex.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/elements/vertex.h
 )
 
 set(UTILITY_HEADERS

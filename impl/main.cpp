@@ -1,6 +1,6 @@
-#include "computational_physics_engine.h"
+#include "graphica.h"
 
 int main(int argc, char **argv)
 {
-   return cpe::Run();
+   return graphica::Run();
 }

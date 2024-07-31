@@ -1,12 +1,12 @@
-# Computational Physics Engine
+# Graphica - a computational physics library
 
-This repository contains a computational physics engine inspired by the concepts explored in the [WolframPhysicsProject](https://wolframphysics.org/).
+This repository contains a computational physics library inspired by the concepts explored in the [WolframPhysicsProject](https://wolframphysics.org/).
 
 ## Overview
 
-The computational physics engine aims to explore the dynamics and behavior of hypergraphs, drawing inspiration from the foundational ideas put forth by the Wolfram Physics project. Hypergraphs are generalizations of graphs where edges can connect more than two vertices, offering a powerful framework for modeling complex systems and interactions.
+Graphica aims to explore the dynamics and behavior of hypergraphs, drawing inspiration from the foundational ideas put forth by the Wolfram Physics project. Hypergraphs are generalizations of graphs where edges can connect more than two vertices, offering a powerful framework for modeling complex physical systems and interactions.
 
-In this engine, hypergraphs evolve based on a set of rules inspired by computational irreducibility and emergent behavior observed in natural systems. These rules govern how hyperedges can form, dissolve, or modify their connections over successive simulation steps. By applying these rules iteratively, the engine generates dynamic configurations of hypergraphs, allowing exploration of emergent properties and structures.
+Graphica provides a framework to evolve hypergraphs based on a set of rules inspired by computational irreducibility and emergent behavior observed in natural systems. These rules govern how hyperedges can form, dissolve, or modify their connections over successive simulation steps. By applying these rules iteratively, the engine generates dynamic configurations of hypergraphs, allowing exploration and analysis of emergent properties and structures.
 
 ![HypergraphVisualization](https://wolframphysics.org/visual-gallery/visualsummary/WolframPhysicsProject-visualsummary-large.png)
 
@@ -19,69 +19,60 @@ In this engine, hypergraphs evolve based on a set of rules inspired by computati
 
 ## Getting Started
 
+To begin working with this project, follow these instructions to set up your development environment on Windows:
+
 ### Prerequisites
 
-- **Rust**: Installed on your system to build the engine.
-  - **Windows**:
-    - Download and run the installer from [rust-lang.org](https://www.rust-lang.org/).
-    - Follow the prompts in the installer.
-    - Optionally, ensure Rust is added to your PATH environment variable during installation.
-    - Verify installation by opening Command Prompt (`cmd`) and typing:
-      ```sh
-      rustc --version
-      ```
-  - **Unix-based Systems** (Linux, macOS):
-    - Open a terminal and run the following command:
-      ```sh
-      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-      ```
-    - Follow the prompts to customize the installation as needed, such as adding Rust to your PATH.
-    - Verify installation by reopening your terminal and typing:
-      ```sh
-      rustc --version
-      ```
+1. **CMake**: Install CMake from the [official CMake website](https://cmake.org/download/).
 
-- **Python**: Required for build and visualization scripts.
-  - **Windows**:
-    - Download the installer from [python.org](https://www.python.org/).
-    - Run the installer and follow the prompts.
-    - Optionally, add Python to your PATH environment variable during installation.
-    - Verify installation by opening a new command prompt and typing:
-      ```sh
-      python --version
-      ```
-  - **Unix-based Systems** (Linux, macOS):
-    - Python usually comes pre-installed on most Unix-based systems. However, to install Python using a package manager:
-      - On Debian/Ubuntu:
-        ```sh
-        sudo apt-get update
-        sudo apt-get install python3
-        ```
-      - On macOS (using Homebrew):
-        ```sh
-        brew install python
-        ```
-    - Verify installation by opening a new terminal and typing:
-      ```sh
-      python --version
-      ```
+2. **Visual Studio 2017 or later**: Install Visual Studio from the [official Visual Studio website](https://visualstudio.microsoft.com/downloads/), ensuring you include the C++ development tools.
 
+3. **vcpkg**: This package manager will handle project dependencies. Follow these steps to install vcpkg:
 
-### Setup/Run
+   - **Clone vcpkg Repository**
 
-- **Clone the repository**:
-   ```bash
-   git clone https://github.com/cnrmlr/computational_physics_engine.git
+     Open Command Prompt and clone the vcpkg repository:
 
-- **Configure and run**:
-   - From the scripts directory, run the following commands to generate the engine's configuration file and run the engine:
-      - **Windows**: 
-      ```sh
-      python configure.py
-      python build_and_run.py --build_type release
-      ```
-      - **Unix-based Systems** (Linux, macOS):
-      ```sh
-      python3 configure.py
-      python3 build_and_run.py --build_type release
-      ```
+     ```sh
+     git clone https://github.com/microsoft/vcpkg.git
+     ```
+
+   - **Bootstrap vcpkg**
+
+     Navigate to the vcpkg directory and run the bootstrap script:
+
+     ```sh
+     cd vcpkg
+     .\bootstrap-vcpkg.bat
+     ```
+
+   - **Set Environment Variables**
+
+     Configure your environment variables to include vcpkg. Run the following commands in Command Prompt:
+
+     ```sh
+     set "VCPKG_ROOT=C:\path\to\vcpkg"
+     set PATH=%VCPKG_ROOT%;%PATH%
+     ```
+
+     Replace `C:\path\to\vcpkg` with the actual path where you cloned vcpkg.
+
+### Building the Project
+
+1. **Debug**
+
+   Navigate to your project root:
+
+   ```sh
+   cd scripts/
+   build-debug.bat
+   ```
+
+2. **Debug (no unit tests)**
+
+   Navigate to your project root:
+
+   ```sh
+   cd scripts/
+   build-debug-no-tests.bat
+   ```

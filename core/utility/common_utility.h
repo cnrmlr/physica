@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace cpe
+namespace graphica
 {
 namespace core
 {
