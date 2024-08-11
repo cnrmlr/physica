@@ -17,4 +17,6 @@ set(HEADERS
 add_executable(Impl ${SOURCES} ${HEADERS})
 target_link_libraries(Impl PRIVATE Core)
 
-target_include_directories(Impl PRIVATE ${PROJECT_SOURCE_DIR}/core/elements ${PROJECT_SOURCE_DIR}/core/utility)
+target_include_directories(Impl PRIVATE ${PROJECT_SOURCE_DIR}/core/elements 
+                                        ${PROJECT_SOURCE_DIR}/core/utility
+)

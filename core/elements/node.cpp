@@ -1,6 +1,6 @@
 #include "common_utility.h"
 #include "hyperedge.h"
-#include "vertex.h"
+#include "node.h"
 
 #include <algorithm>
 
@@ -10,25 +10,25 @@ namespace core
 {
 namespace elements
 {
-Vertex::Vertex()
+Node::Node()
    : IdentifiableBase()
 {
 }
 
-Vertex::~Vertex()
+Node::~Node()
 {
 }
 
-const std::vector<std::weak_ptr<Hyperedge>> Vertex::getIncidentEdges()
+const std::vector<std::weak_ptr<Hyperedge>> Node::getIncidentEdges()
 {
    return utility::MakeWeakPtrVector(incidentEdges_);
 }
 
-bool Vertex::isAdjacentTo(const std::weak_ptr<Vertex>& vertex)
+bool Node::isAdjacentTo(const std::weak_ptr<Node>& node)
 {
    for (auto& edge : incidentEdges_)
    {
-      if (edge->isIncidentTo(vertex))
+      if (edge->isIncidentTo(node))
       {
          return true;
       }
@@ -37,17 +37,17 @@ bool Vertex::isAdjacentTo(const std::weak_ptr<Vertex>& vertex)
    return false;
 }
 
-bool Vertex::isIncidentTo(const std::weak_ptr<Hyperedge>& edge)
+bool Node::isIncidentTo(const std::weak_ptr<Hyperedge>& edge)
 {
    return utility::FindWithWeakPtr(incidentEdges_, edge) != incidentEdges_.end();
 }
 
-void Vertex::addIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
+void Node::addIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
 {
    incidentEdges_.emplace_back(incidentEdge);
 }
 
-void Vertex::removeIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
+void Node::removeIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
 {
    auto edgeIter = utility::FindWithWeakPtr(incidentEdges_, incidentEdge);
 
@@ -57,12 +57,12 @@ void Vertex::removeIncidentEdge(const std::weak_ptr<Hyperedge>& incidentEdge)
    }
 }
 
-bool Vertex::operator==(const Vertex& rhs) const
+bool Node::operator==(const Node& rhs) const
 {
    return IdentifiableBase::operator==(rhs);
 }
 
-bool Vertex::operator!=(const Vertex& rhs) const
+bool Node::operator!=(const Node& rhs) const
 {
    return IdentifiableBase::operator!=(rhs);
 }

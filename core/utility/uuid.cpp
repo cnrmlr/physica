@@ -22,9 +22,9 @@ UUID::~UUID()
 }
 
 UUID::UUID(const UUID& rhs)
+   : mostSignificantBits_(rhs.mostSignificantBits_)
+   , leastSignificantBits_(rhs.leastSignificantBits_)
 {
-   mostSignificantBits_ = rhs.mostSignificantBits_;
-   leastSignificantBits_ = rhs.leastSignificantBits_;
 }
 
 UUID& UUID::operator=(const UUID& rhs)
@@ -34,6 +34,7 @@ UUID& UUID::operator=(const UUID& rhs)
       mostSignificantBits_ = rhs.mostSignificantBits_;
       leastSignificantBits_ = rhs.leastSignificantBits_;
    }
+
    return *this;
 }
 

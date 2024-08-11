@@ -1,7 +1,7 @@
 #include "common_utility.h"
 #include "hyperedge.h"
 #include "hypergraph.h"
-#include "vertex.h"
+#include "node.h"
 
 namespace graphica
 {
@@ -18,68 +18,68 @@ Hypergraph::~Hypergraph()
 {
 }
 
-const std::weak_ptr<Vertex> Hypergraph::addVertex()
+const std::weak_ptr<Node> Hypergraph::addNode()
 {
-   std::shared_ptr<Vertex> vertex = std::make_shared<Vertex>();
-   return vertices_.emplace_back(vertex);
+   std::shared_ptr<Node> node = std::make_shared<Node>();
+   return nodes_.emplace_back(node);
 }
 
-void Hypergraph::removeVertex(const std::weak_ptr<Vertex>& vertex)
+void Hypergraph::removeNode(const std::weak_ptr<Node>& node)
 {
-   // remove the vertex from the edges it exists on
+   // remove the Node from the edges it exists on
    for (auto& edge : edges_)
    {
-      edge->removeVertex(vertex);
+      edge->removeNode(node);
    }
 
-   // remove the vertex from the graph
-   auto vertexIter = utility::FindWithWeakPtr(vertices_, vertex);
+   // remove the Node from the graph
+   auto nodeIter = utility::FindWithWeakPtr(nodes_, node);
 
-   if (vertexIter != vertices_.end())
+   if (nodeIter != nodes_.end())
    {
-      vertices_.erase(vertexIter);
+      nodes_.erase(nodeIter);
    }
 }
 
-const std::vector<std::weak_ptr<Vertex>> Hypergraph::addVertices(size_t count)
+const std::vector<std::weak_ptr<Node>> Hypergraph::addNodes(size_t count)
 {
-   std::vector<std::weak_ptr<Vertex>> newVertices;
-   newVertices.reserve(count);
+   std::vector<std::weak_ptr<Node>> newNodes;
+   newNodes.reserve(count);
 
    for (size_t i = 0; i < count; ++i)
    {
-      newVertices.emplace_back(addVertex());
+      newNodes.emplace_back(addNode());
    }
 
-   return newVertices;
+   return newNodes;
 }
 
-void Hypergraph::removeVertices(const std::vector<std::weak_ptr<Vertex>>& vertices)
+void Hypergraph::removeNodes(const std::vector<std::weak_ptr<Node>>& nodes)
 {
-   for (auto& vertex : vertices)
+   for (auto& node : nodes)
    {
-      removeVertex(vertex);
+      removeNode(node);
    }
 }
 
-const std::weak_ptr<Hyperedge> Hypergraph::addEdge(std::vector<std::weak_ptr<Vertex>> vertices)
+const std::weak_ptr<Hyperedge> Hypergraph::addEdge(std::vector<std::weak_ptr<Node>> nodes)
 {
-   std::vector<std::shared_ptr<Vertex>> sharedVertices = utility::MakeSharedPtrVector(vertices);
+   std::vector<std::shared_ptr<Node>> sharedNodes = utility::MakeSharedPtrVector(nodes);
 
    // return nullptr if there was an issue doing the conversion
-   if (sharedVertices.empty())
+   if (sharedNodes.empty())
    {
-      return std::make_shared<Hyperedge>();
+      return std::shared_ptr<Hyperedge>(nullptr);
    }
 
    // add the edge to the graph and give the incident vertices a ref to the new edge
-   std::shared_ptr<Hyperedge> edge = std::make_shared<Hyperedge>(sharedVertices);
+   std::shared_ptr<Hyperedge> edge = std::make_shared<Hyperedge>(sharedNodes);
 
    edges_.push_back(edge);
 
-   for (auto& vertex : sharedVertices)
+   for (auto& node : sharedNodes)
    {
-      vertex->addIncidentEdge(edge);
+      node->addIncidentEdge(edge);
    }
 
    return edge;
@@ -91,17 +91,17 @@ void Hypergraph::removeEdge(const std::weak_ptr<Hyperedge>& edge)
 
    if (edgeIter != edges_.end())
    {
-      edgeIter->get()->removeFromVertexIncidenceLists();
+      edgeIter->get()->removeFromNodeIncidenceLists();
       edges_.erase(edgeIter);
    }
 }
 
-const std::vector<std::weak_ptr<Hyperedge>> Hypergraph::addEdges(std::vector<std::vector<std::weak_ptr<Vertex>>> vertexSets)
+const std::vector<std::weak_ptr<Hyperedge>> Hypergraph::addEdges(std::vector<std::vector<std::weak_ptr<Node>>> NodeSets)
 {
    std::vector<std::weak_ptr<Hyperedge>> newEdges;
-   newEdges.reserve(vertexSets.size());
+   newEdges.reserve(NodeSets.size());
 
-   for (auto& set : vertexSets)
+   for (auto& set : NodeSets)
    {
       newEdges.emplace_back(addEdge(set));
    }
@@ -117,14 +117,35 @@ void Hypergraph::removeEdges(const std::vector<std::weak_ptr<Hyperedge>>& edges)
    }
 }
 
-const std::vector<std::weak_ptr<Vertex>> Hypergraph::getVertices() const
+const std::vector<std::weak_ptr<Node>> Hypergraph::getNodes() const
 {
-   return utility::MakeWeakPtrVector(vertices_);
+   return utility::MakeWeakPtrVector(nodes_);
 }
 
 const std::vector<std::weak_ptr<Hyperedge>> Hypergraph::getEdges() const
 {
    return utility::MakeWeakPtrVector(edges_);
+}
+
+std::vector<std::vector<unsigned short>> Hypergraph::getAdajencyMatrix() const
+{
+   std::vector<std::vector<unsigned short>> adjacencyMatrix;
+   adjacencyMatrix.reserve(nodes_.size());
+
+   for (auto& node_i : nodes_)
+   {
+      std::vector<unsigned short> adjacencyList;
+      adjacencyList.reserve(nodes_.size());
+
+      for (auto& node_j : nodes_)
+      {
+         adjacencyList.push_back(static_cast<unsigned short>(node_i->isAdjacentTo(node_j)));
+      }
+
+      adjacencyMatrix.push_back(adjacencyList);
+   }
+
+   return adjacencyMatrix;
 }
 }
 }

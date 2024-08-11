@@ -32,70 +32,70 @@ protected:
    }
 };
 
-TEST_F(HypergraphTest, AddVertex)
+TEST_F(HypergraphTest, AddNode)
 {
-   std::weak_ptr<core::elements::Vertex> vertex = hypergraph_->addVertex();
+   std::weak_ptr<core::elements::Node> node = hypergraph_->addNode();
 
-   ASSERT_TRUE(vertex.lock());
-   ASSERT_EQ(hypergraph_->getVertices().size(), 1);
-   ASSERT_EQ(hypergraph_->getVertices().at(0).lock(), vertex.lock());
+   ASSERT_TRUE(node.lock());
+   ASSERT_EQ(hypergraph_->getNodes().size(), 1);
+   ASSERT_EQ(hypergraph_->getNodes().at(0).lock(), node.lock());
 }
 
-TEST_F(HypergraphTest, RemoveVertex)
+TEST_F(HypergraphTest, RemoveNode)
 {
-   std::weak_ptr<core::elements::Vertex> vertex = hypergraph_->addVertex();
-   hypergraph_->removeVertex(vertex);
+   std::weak_ptr<core::elements::Node> node = hypergraph_->addNode();
+   hypergraph_->removeNode(node);
 
-   ASSERT_TRUE(vertex.expired());
-   ASSERT_TRUE(hypergraph_->getVertices().empty());
+   ASSERT_TRUE(node.expired());
+   ASSERT_TRUE(hypergraph_->getNodes().empty());
 }
 
-TEST_F(HypergraphTest, AddVertices)
+TEST_F(HypergraphTest, AddNodes)
 {
-   std::vector<std::weak_ptr<core::elements::Vertex>> vertices = hypergraph_->addVertices(3);
+   std::vector<std::weak_ptr<core::elements::Node>> nodes = hypergraph_->addNodes(3);
 
-   ASSERT_EQ(vertices.size(), 3);
-   ASSERT_EQ(hypergraph_->getVertices().size(), 3);
+   ASSERT_EQ(nodes.size(), 3);
+   ASSERT_EQ(hypergraph_->getNodes().size(), 3);
 
-   for (size_t i = 0; i < vertices.size() && i < hypergraph_->getVertices().size(); ++i)
+   for (size_t i = 0; i < nodes.size() && i < hypergraph_->getNodes().size(); ++i)
    {
-      ASSERT_TRUE(vertices.at(i).lock());
-      ASSERT_EQ(vertices.at(i).lock(), hypergraph_->getVertices().at(i).lock());
+      ASSERT_TRUE(nodes.at(i).lock());
+      ASSERT_EQ(nodes.at(i).lock(), hypergraph_->getNodes().at(i).lock());
    }
 }
 
-TEST_F(HypergraphTest, RemoveVertices)
+TEST_F(HypergraphTest, RemoveNodes)
 {
-   std::vector<std::weak_ptr<core::elements::Vertex>> vertices = hypergraph_->addVertices(3);
-   hypergraph_->removeVertices(vertices);
+   std::vector<std::weak_ptr<core::elements::Node>> nodes = hypergraph_->addNodes(3);
+   hypergraph_->removeNodes(nodes);
 
-   ASSERT_TRUE(hypergraph_->getVertices().empty());
+   ASSERT_TRUE(hypergraph_->getNodes().empty());
 
-   for (auto& vertex : vertices)
+   for (auto& node : nodes)
    {
-      ASSERT_TRUE(vertex.expired());
+      ASSERT_TRUE(node.expired());
    }
 }
 
 TEST_F(HypergraphTest, AddEdge)
 {
-   std::vector<std::weak_ptr<core::elements::Vertex>> vertices = hypergraph_->addVertices(3);
-   std::weak_ptr<core::elements::Hyperedge> edge = hypergraph_->addEdge(vertices);
+   std::vector<std::weak_ptr<core::elements::Node>> nodes = hypergraph_->addNodes(3);
+   std::weak_ptr<core::elements::Hyperedge> edge = hypergraph_->addEdge(nodes);
 
    ASSERT_TRUE(edge.lock());
    ASSERT_EQ(hypergraph_->getEdges().size(), 1);
    ASSERT_EQ(hypergraph_->getEdges().at(0).lock(), edge.lock());
 
-   for (size_t i = 0; i < vertices.size() && i < edge.lock()->getVertices().size(); ++i)
+   for (size_t i = 0; i < nodes.size() && i < edge.lock()->getNodes().size(); ++i)
    {
-      ASSERT_EQ(vertices.at(i).lock(), edge.lock()->getVertices().at(i).lock());
+      ASSERT_EQ(nodes.at(i).lock(), edge.lock()->getNodes().at(i).lock());
    }
 }
 
 TEST_F(HypergraphTest, RemoveEdge)
 {
-   std::vector<std::weak_ptr<core::elements::Vertex>> vertices = hypergraph_->addVertices(3);
-   std::weak_ptr<core::elements::Hyperedge> edge = hypergraph_->addEdge(vertices);
+   std::vector<std::weak_ptr<core::elements::Node>> nodes = hypergraph_->addNodes(3);
+   std::weak_ptr<core::elements::Hyperedge> edge = hypergraph_->addEdge(nodes);
    hypergraph_->removeEdge(edge);
 
    ASSERT_TRUE(edge.expired());
@@ -104,11 +104,11 @@ TEST_F(HypergraphTest, RemoveEdge)
 
 TEST_F(HypergraphTest, RemoveEdges)
 {
-   std::vector<std::weak_ptr<core::elements::Vertex>> vertexSet_1 = hypergraph_->addVertices(3);
-   std::vector<std::weak_ptr<core::elements::Vertex>> vertexSet_2 = hypergraph_->addVertices(3);
+   std::vector<std::weak_ptr<core::elements::Node>> nodeSet_1 = hypergraph_->addNodes(3);
+   std::vector<std::weak_ptr<core::elements::Node>> nodeSet_2 = hypergraph_->addNodes(3);
 
-   std::weak_ptr<core::elements::Hyperedge> edge_1 = hypergraph_->addEdge(vertexSet_1);
-   std::weak_ptr<core::elements::Hyperedge> edge_2 = hypergraph_->addEdge(vertexSet_2);
+   std::weak_ptr<core::elements::Hyperedge> edge_1 = hypergraph_->addEdge(nodeSet_1);
+   std::weak_ptr<core::elements::Hyperedge> edge_2 = hypergraph_->addEdge(nodeSet_2);
 
    hypergraph_->removeEdges({ edge_1, edge_2 });
 

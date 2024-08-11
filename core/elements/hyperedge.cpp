@@ -1,6 +1,6 @@
 #include "common_utility.h"
 #include "hyperedge.h"
-#include "vertex.h"
+#include "node.h"
 #include "identifiable_base.h"
 
 namespace graphica
@@ -11,18 +11,18 @@ namespace elements
 {
 Hyperedge::Hyperedge()
    : IdentifiableBase()
-   , vertices_(0)
+   , nodes_(0)
 {
 }
 
-Hyperedge::Hyperedge(const std::vector<std::shared_ptr<Vertex>>& vertices)
+Hyperedge::Hyperedge(const std::vector<std::shared_ptr<Node>>& nodes)
    : IdentifiableBase()
 {
-   vertices_.reserve(vertices.size());
+   nodes_.reserve(nodes.size());
 
-   for (auto& vertex : vertices)
+   for (auto& node : nodes)
    {
-      vertices_.push_back(vertex);
+      nodes_.push_back(node);
    }
 }
 
@@ -30,16 +30,16 @@ Hyperedge::~Hyperedge()
 {
 }
 
-const std::vector<std::weak_ptr<Vertex>> Hyperedge::getVertices() const
+const std::vector<std::weak_ptr<Node>> Hyperedge::getNodes() const
 {
-   return utility::MakeWeakPtrVector(vertices_);
+   return utility::MakeWeakPtrVector(nodes_);
 }
 
 bool Hyperedge::isAdjacentTo(const std::weak_ptr<Hyperedge>& edge)
 {
-   for (auto& vertex : vertices_)
+   for (auto& node : nodes_)
    {
-      if (edge.lock() && edge.lock()->isIncidentTo(vertex))
+      if (edge.lock() && edge.lock()->isIncidentTo(node))
       {
          return true;
       }
@@ -48,31 +48,31 @@ bool Hyperedge::isAdjacentTo(const std::weak_ptr<Hyperedge>& edge)
    return false;
 }
 
-bool Hyperedge::isIncidentTo(const std::weak_ptr<Vertex>& vertex)
+bool Hyperedge::isIncidentTo(const std::weak_ptr<Node>& vertex)
 {
-   return findVertex(vertex) != vertices_.end();
+   return findNode(vertex) != nodes_.end();
 }
 
-const std::vector<std::shared_ptr<Vertex>>::iterator Hyperedge::findVertex(std::weak_ptr<Vertex> vertex)
+const std::vector<std::shared_ptr<Node>>::iterator Hyperedge::findNode(std::weak_ptr<Node> node)
 {
-   return utility::FindWithWeakPtr(vertices_, vertex);
+   return utility::FindWithWeakPtr(nodes_, node);
 }
 
-void Hyperedge::removeVertex(std::weak_ptr<Vertex> vertex)
+void Hyperedge::removeNode(std::weak_ptr<Node> node)
 {
-   auto vertexIter = findVertex(vertex);
+   auto nodeIter = findNode(node);
    
-   if (vertexIter != vertices_.end())
+   if (nodeIter != nodes_.end())
    {
-      vertices_.erase(findVertex(vertex));
+      nodes_.erase(findNode(node));
    }
 }
 
-void Hyperedge::removeFromVertexIncidenceLists()
+void Hyperedge::removeFromNodeIncidenceLists()
 {
-   for (auto& vertex : vertices_)
+   for (auto& node : nodes_)
    {
-      vertex->removeIncidentEdge(shared_from_this());
+      node->removeIncidentEdge(shared_from_this());
    }
 }
 

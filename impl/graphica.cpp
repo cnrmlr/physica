@@ -3,7 +3,9 @@
 #include "graphica.h"
 #include "hyperedge.h"
 #include "hypergraph.h"
-#include "vertex.h"
+#include "node.h"
+#include "pattern_match.h"
+#include "rule.h"
 
 #include <iostream>
 #include <cassert>
@@ -13,37 +15,37 @@
 *
 * In hypergraph theory, the following symbols and conventions are commonly used:
 *
-* V: The set of all vertices in the hypergraph.
+* V: The set of all nodes in the hypergraph.
 *    - Example: V = {v1, v2, v3, ..., vn}
 *
-* W: A subset of the vertex set V.
+* W: A subset of the node set V.
 *    - Example: V = {v1, v2, v3, ..., vn}
 *               W = {v2, v3}
 *
 * E: The set of all hyperedges in the hypergraph.
-*    - Each hyperedge is itself a subset of the vertex set V.
+*    - Each hyperedge is itself a subset of the node set V.
 *    - Example: E = {e1, e2, e3, ..., em} where each ei is a subset of V
 *
 * F: A subset of the edge set E.
 *    - Example:  E = {e1, e2, e3, ..., em}
 *                F = {e2, e3}
 *
-* v: A single vertex in the hypergraph
+* v: A single node in the hypergraph
 * 
 * e: A single edge in the hypergraph
 * 
 * General Notation:
-* - Hypergraphs are often denoted as H = (V, E), where V is the set of vertices
+* - Hypergraphs are often denoted as H = (V, E), where V is the set of nodes
 *   and E is the set of hyperedges.
-* - A hyperedge e in E is a set of vertices, e.g., e = {v1, v2, v3}.
-* - The incidence relation between vertices and hyperedges is fundamental in hypergraph theory.
+* - A hyperedge e in E is a set of nodes, e.g., e = {v1, v2, v3}.
+* - The incidence relation between nodes and hyperedges is fundamental in hypergraph theory.
 *
 * Usage in Code:
-* - std::vector<Hypervertex> V;   // The set of all vertices
+* - std::vector<Node> V;          // The set of all nodes
 * - std::vector<Hyperedge> E;     // The set of all hyperedges
-* - std::vector<Vertex> W;        // A subset of vertices
+* - std::vector<Node> W;          // A subset of nodes
 * - std::vector<Hyperedge> F;     // A subset of hyperedges
-* - std::weak_ptr<Hypervertex> v; // A single vertex
+* - std::weak_ptr<Node> v;        // A single node
 * - std::weak_ptr<Hyperedge> e;   // A single edge
 *
 * This symbology helps in clearly defining the structure and operations of hypergraphs
@@ -60,78 +62,78 @@ int Run()
 
    // Each hypergraph instance should be managed by std::unique_ptr as these graphs
    // are fundamentally unique in nature and non-copyable. When a new graph is created,
-   // it will have zero vertices and zero edges.
+   // it will have zero nodes and zero edges.
 
    std::unique_ptr<Hypergraph> G = std::make_unique<Hypergraph>();
 
 
 
-   // The full sets of vertices and edges that currently exist on the hypergraph can be 
+   // The full sets of nodes and edges that currently exist on the hypergraph can be 
    // fetched using the following functions. Note that these are sets of weak ptrs, 
    // intended to not increase the reference count on objects managed by the hypergraph,
    // and may expire if operations to the hypergraph occur within the same scope that 
    // these sets are declared.
    {
-      std::vector<std::weak_ptr<Vertex>> V = G->getVertices();
+      std::vector<std::weak_ptr<Node>> V = G->getNodes();
 
       std::vector<std::weak_ptr<Hyperedge>> E = G->getEdges();
    }
 
 
 
-   // Adding a single vertex to the hypergraph will return a single non-reference counted
-   // pointer to the new vertex. The removal operation will validate the weak pointer and 
-   // remove it from the graph if it is not expired. The local weak ptr to the vertex will 
+   // Adding a single node to the hypergraph will return a single non-reference counted
+   // pointer to the new node. The removal operation will validate the weak pointer and 
+   // remove it from the graph if it is not expired. The local weak ptr to the node will 
    // then be expired.
    {
-      std::weak_ptr<Vertex> v = G->addVertex();
+      std::weak_ptr<Node> v = G->addNode();
 
-      G->removeVertex(v);
+      G->removeNode(v);
    }
 
 
 
-   // Vertices can also be added in bulk by specifying the number of vertices to add.
-   // This operation will return a vector of weak ptrs to the newly created vertices.
-   // We can also remove vertices in bulk by specifying a std::vector or 
-   // std::initializer_list of the weak vertex ptrs.
+   // Nodes can also be added in bulk by specifying the number of nodes to add.
+   // This operation will return a vector of weak ptrs to the newly created nodes.
+   // We can also remove nodes in bulk by specifying a std::vector or 
+   // std::initializer_list of the weak node ptrs.
    {
-      std::vector<std::weak_ptr<Vertex>> W = G->addVertices(3);
+      std::vector<std::weak_ptr<Node>> W = G->addNodes(3);
 
-      G->removeVertices(W);
+      G->removeNodes(W);
    }
 
 
 
-   // Edges are added to the hypergraph by specifying a set of incident vertices using 
-   // a vector or initializer list of weak ptrs to the vertices. If an attempt is made
-   // to add an expired vertex to an edge, that vertex will not be added to the edge.
+   // Edges are added to the hypergraph by specifying a set of incident nodes using 
+   // a vector or initializer list of weak ptrs to the nodes. If an attempt is made
+   // to add an expired node to an edge, that node will not be added to the edge.
    // Once an edge is created, it can be removed from the graph by passing a weak ptr to
    // the hypergraph::removeEdge operation. The remove edge operation also handles the
-   // removal of the edge from the incidence lists of the vertices on the edge to ensure
-   // there are no dangling strong refs and the edge can be properly removed. If a vertex is 
+   // removal of the edge from the incidence lists of the nodes on the edge to ensure
+   // there are no dangling strong refs and the edge can be properly removed. If a node is 
    // removed from the graph while it exists on one or more edges, it is first removed 
    // from all of its incident edges and then removed from the graph.
    {
-      std::vector<std::weak_ptr<Vertex>> W = G->addVertices(3);
+      std::vector<std::weak_ptr<Node>> W = G->addNodes(3);
 
       std::weak_ptr<Hyperedge> e = G->addEdge(W);
 
       G->removeEdge(e);
 
-      G->removeVertices(W);
+      G->removeNodes(W);
    }
 
 
 
-   // Just as vertices can be added in bulk, edges can as well. Hypergraph::addEdges
-   // takes a vector of vectors where each sub-vector specifies the vertices on a specific
+   // Just as nodes can be added in bulk, edges can as well. Hypergraph::addEdges
+   // takes a vector of vectors where each sub-vector specifies the nodes on a specific
    // hyperedge. The operation returns a vector of weak edge ptrs so to not increase the 
    // reference count on the edges that are now owned by the hypergraph. Edges can be removed
    // in bulk as well with the Hypergraph::removeEdges operation which take a vector of weak
    // edge pointers.
    {
-      std::vector<std::weak_ptr<Vertex>> W = G->addVertices(6);
+      std::vector<std::weak_ptr<Node>> W = G->addNodes(6);
 
       std::vector<std::weak_ptr<Hyperedge>> F = G->addEdges({
           { W[0], W[1] },
@@ -143,7 +145,19 @@ int Run()
 
       G->removeEdges(F);
 
-      G->removeVertices(W);
+      G->removeNodes(W);
+   }
+
+
+
+   {
+      AbstractRelation pattern = { 1, 1, 2 };
+
+      auto nodes = G->addNodes(2);
+
+      auto edge = G->addEdge({ nodes.at(0), nodes.at(0), nodes.at(1) });
+
+      auto match = core::functions::PatternMatch(pattern, G->getEdges());
    }
 
    return 1;
