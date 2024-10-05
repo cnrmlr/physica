@@ -1,12 +1,12 @@
-# Graphica - a computational physics library
+# Physica - a computational physics library
 
 This repository contains a computational physics library inspired by the concepts explored in the [WolframPhysicsProject](https://wolframphysics.org/).
 
 ## Overview
 
-Graphica aims to explore the dynamics and behavior of hypergraphs, drawing inspiration from the foundational ideas put forth by the Wolfram Physics project. Hypergraphs are generalizations of graphs where edges can connect more than two vertices, offering a powerful framework for modeling complex physical systems and interactions.
+Physica aims to explore the dynamics and behavior of hypergraphs, drawing inspiration from the foundational ideas put forth by the Wolfram Physics project. Hypergraphs are generalizations of graphs where edges can connect more than two vertices, offering a powerful framework for modeling complex physical systems and interactions.
 
-Graphica provides a framework to evolve hypergraphs based on a set of rules inspired by computational irreducibility and emergent behavior observed in natural systems. These rules govern how hyperedges can form, dissolve, or modify their connections over successive simulation steps. By applying these rules iteratively, the engine generates dynamic configurations of hypergraphs, allowing exploration and analysis of emergent properties and structures.
+Physica provides a framework to evolve hypergraphs based on a set of rules inspired by computational irreducibility and emergent behavior observed in natural systems. These rules govern how hyperedges can form, dissolve, or modify their connections over successive simulation steps. By applying these rules iteratively, the engine generates dynamic configurations of hypergraphs, allowing exploration and analysis of emergent properties and structures.
 
 ![HypergraphVisualization](https://wolframphysics.org/visual-gallery/visualsummary/WolframPhysicsProject-visualsummary-large.png)
 
