@@ -30,6 +30,9 @@ public:
    const std::vector<std::weak_ptr<Hyperedge>> addEdges(std::vector<std::vector<std::weak_ptr<Node>>> nodeSets);
    void removeEdges(const std::vector<std::weak_ptr<Hyperedge>>& edges);
 
+   const std::vector<std::weak_ptr<Hyperedge>> replaceEdges(const std::vector<std::weak_ptr<Hyperedge>>& removedEdges,
+      std::vector<std::vector<std::weak_ptr<Node>>> nodeSets);
+
    const std::vector<std::weak_ptr<Node>> getNodes() const;
    const std::vector<std::weak_ptr<Hyperedge>> getEdges() const;
 

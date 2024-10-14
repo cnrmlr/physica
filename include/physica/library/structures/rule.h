@@ -18,6 +18,9 @@ public:
 
    Rule(std::vector<AbstractRelation> pattern, std::vector<AbstractRelation> replace);
 
+   const std::vector<AbstractRelation>& getPattern() const { return pattern_; }
+   const std::vector<AbstractRelation>& getReplace() const { return replace_; }
+
 private:
    std::vector<AbstractRelation> pattern_;
    std::vector<AbstractRelation> replace_;

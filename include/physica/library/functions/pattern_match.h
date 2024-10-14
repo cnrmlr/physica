@@ -8,6 +8,5 @@
 
 namespace physica::functions
 {
-std::weak_ptr<structures::Hyperedge> PatternMatch(const structures::AbstractRelation& pattern, 
-                                                const std::vector<std::weak_ptr<structures::Hyperedge>>& edges);
+static void SetReplace_v1(structures::Hypergraph& graph, const structures::Rule& rule);
 }
