@@ -10,19 +10,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 set(FUNCTIONS_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/functions/pattern_match.cpp
+    functions/pattern_match.cpp
 )
 
 set(STRUCTURES_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/structures/hyperedge.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/structures/hypergraph.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/structures/node.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/structures/rule.cpp
+    structures/hyperedge.cpp
+    structures/hypergraph.cpp
+    structures/node.cpp
+    structures/rule.cpp
 )
 
 set(UTILITY_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/utility/identifiable_base.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/utility/uuid.cpp
+    utility/identifiable_base.cpp
+    utility/uuid.cpp
 )
 
 set(FUNCTIONS_HEADERS
@@ -52,7 +52,6 @@ source_group("Utility\\Header Files" FILES ${UTILITY_HEADERS})
 set(SOURCES ${STRUCTURES_SOURCES} 
             ${FUNCTIONS_SOURCES} 
             ${UTILITY_SOURCES}
-            physica.cpp
             model.cpp
 )
 
@@ -66,7 +65,7 @@ set(HEADERS ${STRUCTURES_HEADERS}
 add_library(physica-library STATIC ${SOURCES} ${HEADERS})
 
 target_include_directories(physica-library PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/functions>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/structures>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/utility>
+	$<BUILD_INTERFACE:functions>
+    $<BUILD_INTERFACE:structures>
+    $<BUILD_INTERFACE:utility>
 )

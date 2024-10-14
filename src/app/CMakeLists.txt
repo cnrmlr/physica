@@ -7,6 +7,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 set(SOURCES
     main.cpp
+	physica.cpp
 )
 
 add_executable(physica-app ${SOURCES} ${HEADERS})
