@@ -1,5 +1,3 @@
-#pragma once
-
 #include <physica/library/physica.h>
 #include <physica/library/structures/hyperedge.h>
 #include <physica/library/structures/hyperedge.h>

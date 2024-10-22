@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(physica-library)
 
-add_compile_options(/std:c++17)
+if (MSVC)
+    add_compile_options(/std:c++17)
+endif ()
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -63,9 +65,3 @@ set(HEADERS ${STRUCTURES_HEADERS}
 )
 
 add_library(physica-library STATIC ${SOURCES} ${HEADERS})
-
-target_include_directories(physica-library PUBLIC
-	$<BUILD_INTERFACE:functions>
-    $<BUILD_INTERFACE:structures>
-    $<BUILD_INTERFACE:utility>
-)

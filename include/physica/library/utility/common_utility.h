@@ -45,7 +45,7 @@ std::vector<std::shared_ptr<T>> MakeSharedPtrVector(const std::vector<std::weak_
 
    for (auto& element : weakVector)
    {
-      if (auto& sharedElement = element.lock())
+      if (auto sharedElement = element.lock())
       {
          sharedVector.push_back(sharedElement);
       }
