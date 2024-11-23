@@ -1,5 +1,10 @@
 #!/bin/bash
 
+find . -name "*.cpp" -o -name "*.h" | xargs clang-format -i
+
+# Install dependencies
+conan install . --build=missing
+
 # Default build type
 BUILD_TYPE="Release"
 

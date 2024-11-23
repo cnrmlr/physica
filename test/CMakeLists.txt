@@ -1,13 +1,13 @@
-add_subdirectory(googletest)
+# Include GoogleTest from Conan
+find_package(GTest REQUIRED)
 
-# some function to easily add tests
+# Function to easily add tests
 function(addTest TEST_NAME TEST_SOURCE)
   add_executable(${TEST_NAME} ${TEST_SOURCE})
-  target_link_libraries(${TEST_NAME} gtest_main)
-  add_test(${TEST_NAME} ${TEST_NAME}) # simply add args if you need some
+  target_link_libraries(${TEST_NAME} PRIVATE GTest::GTest GTest::Main)
+  add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME}) # Add args if needed
+  target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 endfunction()
 
-include_directories(./googletest/googletest/)
-
-# the tests
-addTest(SomeTest SomeTest.cpp)
+# Add the tests
+addTest(test-hypergraph test_hypergraph.cpp)

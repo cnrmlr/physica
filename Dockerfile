@@ -18,7 +18,10 @@ RUN apt-get -y install doxygen plantuml graphviz
 RUN apt-get -y install lcov iwyu
 
 # Install gdb
-RUN apt-get update && apt-get install -y gdb
+RUN apt-get -y install gdb
+
+# Install conan
+RUN apt-get -y install python3 python3-pip && pip install conan
 
 # Clean up to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
