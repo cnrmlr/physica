@@ -1,78 +1,83 @@
-# Physica - a computational physics library
+# cpp-vscode-template <!-- omit in toc -->
 
-This repository contains a computational physics library inspired by the concepts explored in the [WolframPhysicsProject](https://wolframphysics.org/).
+A workspace template for coding C/C++ with Visual Studio Code
+
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Features](#features)
+  - [CMake](#cmake)
+  - [Docker](#docker)
+  - [Devcontainer support](#devcontainer-support)
+  - [Variants](#variants)
+  - [Tasks](#tasks)
+  - [Testing](#testing)
+  - [Documentation](#documentation)
+    - [Live Server](#live-server)
+    - [Doxygen](#doxygen)
 
 ## Overview
 
-Physica aims to explore the dynamics and behavior of hypergraphs, drawing inspiration from the foundational ideas put forth by the Wolfram Physics project. Hypergraphs are generalizations of graphs where edges can connect more than two vertices, offering a powerful framework for modeling complex physical systems and interactions.
+This is a project template to start working with Visual Studio Code on a fresh Linux and CMake based C/C++ project.
 
-Physica provides a framework to evolve hypergraphs based on a set of rules inspired by computational irreducibility and emergent behavior observed in natural systems. These rules govern how hyperedges can form, dissolve, or modify their connections over successive simulation steps. By applying these rules iteratively, the engine generates dynamic configurations of hypergraphs, allowing exploration and analysis of emergent properties and structures.
+## Requirements
 
-![HypergraphVisualization](https://wolframphysics.org/visual-gallery/visualsummary/WolframPhysicsProject-visualsummary-large.png)
+To start hacking right away, firstly you need to install the following packages
+
+- Visual Studio Code: [https://code.visualstudio.com/](https://code.visualstudio.com/)
+- Docker (if you want to develop within a container): [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
+- Remote Container Extension for Visual Studio Code: [https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+## Usage
+
+Simply clone this repository and copy it's content without the `.git*` files to the folder you want to start your new project in.
 
 ## Features
 
-- **Hypergraph Representation:** Implements a data structure to represent and manipulate hypergraphs.
-- **Configuration Options:** (planned) Configurable initial conditions and transformation rules.
-- **Simulation Engine:** (planned) Provides mechanisms to simulate the evolution of hypergraphs over time according to the initial conditions and the configured rule of evolution.
-- **Visualization Tools:** (planned) Includes tools for visualizing the generated hypergraphs and their dynamics.
+The following development features are covered by this repository.
 
-## Getting Started
+### CMake
 
-To begin working with this project, follow these instructions to set up your development environment on Windows:
+Within the dockerfile the latest distribution related version of CMake will be installed.
+If you prefer another version, adapt the minimum required version in `CMakeLists.txt` in the workspace root.
 
-### Prerequisites
+### Docker
 
-1. **CMake**: Install CMake from the [official CMake website](https://cmake.org/download/).
+A dockerfile with all necessary dependencies is contained. It could be used for local development with dev containers or a CI pipeline for automated building.
 
-2. **Visual Studio 2017 or later**: Install Visual Studio from the [official Visual Studio website](https://visualstudio.microsoft.com/downloads/), ensuring you include the C++ development tools.
+### Devcontainer support
 
-3. **vcpkg**: This package manager will handle project dependencies. Follow these steps to install vcpkg:
+Within `.devcontainer/devcontainer.json` you can see the dev container configuration. I added all my personal favourite extensions. They will be installed automatically to your container if you use the dev container feature.
 
-   - **Clone vcpkg Repository**
+### Variants
 
-     Open Command Prompt and clone the vcpkg repository:
+Supported build variants:
 
-     ```sh
-     git clone https://github.com/microsoft/vcpkg.git
-     ```
+- Debug, Release
+- No instrumentation, Coverage, Address Sanitizer, Thread Sanitizer
 
-   - **Bootstrap vcpkg**
+### Tasks
 
-     Navigate to the vcpkg directory and run the bootstrap script:
+Currently there are several tasks that deal with coverage generation. See my [coverage documentation](https://github.com/fbaeuerlein/cpp-vscode-guide/blob/master/doc/Coverage.md) from another project.
 
-     ```sh
-     cd vcpkg
-     .\bootstrap-vcpkg.bat
-     ```
+### Testing
 
-   - **Set Environment Variables**
+I'm used to googletest, so I added the latest release within the `test` directory. I also provided a test executable sample. If you prefer a different testing framework, simply replace it.
+For test management the Test Explorer and C++ TestMate extensions are installed.
 
-     Configure your environment variables to include vcpkg. Run the following commands in Command Prompt:
+### Documentation
 
-     ```sh
-     set "VCPKG_ROOT=C:\path\to\vcpkg"
-     set PATH=%VCPKG_ROOT%;%PATH%
-     ```
+For documentation purposes doxygen, plantuml and some markdown supporting extensions are installed. Also the necessary packages are considered in the dockerfile.
 
-     Replace `C:\path\to\vcpkg` with the actual path where you cloned vcpkg.
+#### Live Server
 
-### Building the Project
+If you are developing within the dev containers, opening a browser from the tasks is not possible. So use the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension to display HTML files (e.g. from doxygen or coverage). It automatically reloads the pages on change. So you don't even to do a reload!
 
-1. **Debug**
+Adapt the port settings in `.vscode/settings.json` and `.devcontainer/devcontainer.json` to connect on localhost to the specified port with your browser.
 
-   Navigate to your project root:
+#### Doxygen
 
-   ```sh
-   cd scripts/
-   build-debug.bat
-   ```
+To adapt doxygen to your project settings adapt the `Doxyfile` in the workspace root.
 
-2. **Debug (no unit tests)**
-
-   Navigate to your project root:
-
-   ```sh
-   cd scripts/
-   build-debug-no-tests.bat
-   ```
+- Update `PROJECT_NAME` according to your project
+- Set `PLANTUML_JAR_PATH` to the path where `plantuml.jar` is located (defaulted to `/usr/share/plantuml`)
