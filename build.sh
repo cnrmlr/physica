@@ -1,9 +1,7 @@
 #!/bin/bash
 
+# Format all C++ and header files using clang-format
 find . -name "*.cpp" -o -name "*.h" | xargs clang-format -i
-
-# Install dependencies
-conan install . --build=missing
 
 # Default build type
 BUILD_TYPE="Release"
@@ -25,13 +23,18 @@ echo "Building with configuration: $BUILD_TYPE"
 # Define build directories
 BUILD_DIR="build"
 TEST_BUILD_DIR="build/test"
+CONAN_DIR="$BUILD_DIR/conan"
+
+# Install Conan dependencies
+mkdir -p "$CONAN_DIR"
+conan install . --build=missing -pr:b="$BUILD_TYPE" -pr:h=default -of="$CONAN_DIR"
 
 # Create and navigate to the build directory
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR" || exit
 
-# Run CMake to configure the project
-cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ..
+# Run CMake to configure the project using Conan's toolchain
+cmake -DCMAKE_TOOLCHAIN_FILE="$CONAN_DIR/conan_toolchain.cmake" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ..
 
 # Build the project
 cmake --build . --config "$BUILD_TYPE"
@@ -43,8 +46,8 @@ cd ..
 mkdir -p "$TEST_BUILD_DIR"
 cd "$TEST_BUILD_DIR" || exit
 
-# Run CMake to configure the tests
-cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ../../test
+# Run CMake to configure the tests using Conan's toolchain
+cmake -DCMAKE_TOOLCHAIN_FILE="conan/conan_toolchain.cmake" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ../../test
 
 # Build the test targets
 cmake --build . --config "$BUILD_TYPE"
