@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <physica/identifiable_base.h>
 #include <vector>
 
 namespace phys::internal
@@ -66,4 +67,25 @@ make_shared_ptr_vector(const std::vector<std::weak_ptr<T>>& weakVector)
 
    return sharedVector;
 }
+
+struct uuid_hash
+{
+   template <typename T>
+   size_t operator()(const T& obj) const
+   {
+      size_t msbHash = std::hash<size_t>{}(obj.uuid().msb());
+      size_t lsbHash = std::hash<size_t>{}(obj.uuid().lsb());
+      return msbHash ^ (lsbHash + 0x9e3779b9 + (msbHash << 6) + (msbHash >> 2));
+   }
+};
+
+struct uuid_equal
+{
+   template <typename T>
+   bool operator()(const T& lhs, const T& rhs) const
+   {
+      return lhs.uuid() == rhs.uuid();
+   }
+};
+
 } // namespace phys::internal

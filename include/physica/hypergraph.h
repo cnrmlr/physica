@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <memory>
 #include <physica/identifiable_base.h>
+#include <physica/internal/common_utility.h>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -16,6 +18,12 @@ class hyperedge;
 
 template <class T>
 class hypergraph;
+
+template <class T>
+using node_set = std::unordered_set<node<T>, internal::uuid_hash, internal::uuid_equal>;
+
+template <class T>
+using edge_set = std::unordered_set<hyperedge<T>, internal::uuid_hash, internal::uuid_equal>;
 
 template <class T>
 class node : public identifiable_base
@@ -60,6 +68,12 @@ template <class T>
 node<T> make_node(T&& obj)
 {
    return node<T>(std::move(obj));
+}
+
+template <class T>
+node_set<T> make_node_set(std::initializer_list<node<T>> init_list)
+{
+   return node_set<T>(init_list);
 }
 
 template <class T>
@@ -144,22 +158,34 @@ hyperedge<T> make_hyperedge(std::vector<node<T>>&& nodes)
 }
 
 template <class T>
+edge_set<T> make_edge_set(std::initializer_list<hyperedge<T>> init_list)
+{
+   return edge_set<T>(init_list);
+}
+
+template <class T>
 class hypergraph : identifiable_base
 {
  public:
-   explicit hypergraph(const std::vector<hyperedge<T>>& edges) : edges_(edges), identifiable_base()
-   {
-   }
-   explicit hypergraph(std::vector<hyperedge<T>>&& edges)
-      : edges_(std::move(edges)), identifiable_base()
+   hypergraph(const node_set<T>& nodes, const edge_set<T>& edges)
+      : nodes_(nodes), edges_(edges), identifiable_base()
    {
    }
 
-   std::vector<hyperedge<T>>& edges() { return edges_; }
-   const std::vector<hyperedge<T>>& edges() const { return edges_; }
+   hypergraph(node_set<T>&& nodes, edge_set<T>&& edges)
+      : nodes_(nodes), edges_(std::move(edges)), identifiable_base()
+   {
+   }
+
+   node_set<T>& nodes() { return nodes_; }
+   const node_set<T>& nodes() const { return nodes_; }
+
+   edge_set<T>& edges() { return edges_; }
+   const edge_set<T>& edges() const { return edges_; }
 
  private:
-   std::vector<hyperedge<T>> edges_;
+   node_set<T> nodes_;
+   edge_set<T> edges_;
 };
 
 template <class T>
@@ -169,15 +195,15 @@ hypergraph<T> make_hypergraph()
 }
 
 template <class T>
-hypergraph<T> make_hypergraph(const std::vector<hyperedge<T>>& edges)
+hypergraph<T> make_hypergraph(const node_set<T>& nodes, const edge_set<T>& edges)
 {
-   return hypergraph<T>(edges);
+   return hypergraph<T>(nodes, edges);
 }
 
 template <class T>
-hypergraph<T> make_hypergraph(std::vector<hyperedge<T>>&& edges)
+hypergraph<T> make_hypergraph(node_set<T>&& nodes, edge_set<T>&& edges)
 {
-   return hypergraph<T>(std::move(edges));
+   return hypergraph<T>(std::move(nodes), std::move(edges));
 }
 
 } // namespace phys

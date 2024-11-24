@@ -67,6 +67,7 @@ TEST_F(HypergraphTest, MakeHyperedgeWithRValue)
    auto node_1 = phys::make_node<Obj>();
    auto node_2 = phys::make_node<Obj>();
    auto edge   = phys::make_hyperedge<Obj>({node_0, node_1, node_2});
+
    EXPECT_EQ(edge.nodes().size(), EDGE_SIZE);
    EXPECT_EQ(edge.nodes().at(0), node_0);
    EXPECT_EQ(edge.nodes().at(1), node_1);
@@ -75,21 +76,32 @@ TEST_F(HypergraphTest, MakeHyperedgeWithRValue)
 
 TEST_F(HypergraphTest, MakeHypergraphWithRValue)
 {
-   auto edge_0 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
-   auto edge_1 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
-   auto graph  = phys::make_hypergraph<Obj>({edge_0, edge_1});
-   EXPECT_EQ(graph.edges().at(0), edge_0);
-   EXPECT_EQ(graph.edges().at(1), edge_1);
+   auto node_0 = phys::make_node<Obj>();
+   auto node_1 = phys::make_node<Obj>();
+   auto edge   = phys::make_hyperedge<Obj>({node_0, node_1});
+   auto graph  = phys::make_hypergraph<Obj>({node_0, node_1}, {edge});
+
+   EXPECT_TRUE(graph.nodes().find(node_0) != graph.nodes().end());
+   EXPECT_TRUE(graph.nodes().find(node_1) != graph.nodes().end());
+   EXPECT_TRUE(graph.edges().find(edge) != graph.edges().end());
 }
 
 TEST_F(HypergraphTest, MakeHypergraphWithLValue)
 {
-   auto edge_0 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
-   auto edge_1 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
-   std::vector<phys::hyperedge<Obj>> edges = {edge_0, edge_1};
-   auto graph                              = phys::make_hypergraph<Obj>(edges);
-   EXPECT_EQ(graph.edges().at(0), edge_0);
-   EXPECT_EQ(graph.edges().at(1), edge_1);
+   auto node_0 = phys::make_node<Obj>();
+   auto node_1 = phys::make_node<Obj>();
+   auto node_2 = phys::make_node<Obj>();
+   auto edge_0 = phys::make_hyperedge<Obj>({node_0, node_1});
+
+   auto nodes = phys::make_node_set<Obj>({node_0, node_1, node_2});
+   auto edges = phys::make_edge_set<Obj>({edge_0});
+
+   auto graph = phys::make_hypergraph<Obj>(nodes, edges);
+
+   EXPECT_TRUE(graph.nodes().find(node_0) != graph.nodes().end());
+   EXPECT_TRUE(graph.nodes().find(node_1) != graph.nodes().end());
+   EXPECT_TRUE(graph.nodes().find(node_2) != graph.nodes().end());
+   EXPECT_TRUE(graph.edges().find(edge_0) != graph.edges().end());
 }
 
 TEST_F(HypergraphTest, AddNodeToEdgeWithArgs)
