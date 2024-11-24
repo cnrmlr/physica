@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string>
 
-namespace phys::internal
+namespace phys
 {
 class uuid
 {
@@ -102,7 +102,6 @@ class uuid
       {
          try
          {
-            // Extracting the hexadecimal substrings
             std::string msbString =
                stringuuid.substr(0, 8) + stringuuid.substr(9, 4) + stringuuid.substr(14, 4);
             std::string lsbString = stringuuid.substr(19, 4) + stringuuid.substr(24);
@@ -138,4 +137,4 @@ class uuid
       leastSignificantBits_ = leastSignificantBits;
    }
 };
-} // namespace phys::internal
+} // namespace phys

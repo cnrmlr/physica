@@ -69,6 +69,15 @@
         "sstream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "any": "cpp",
+        "chrono": "cpp",
+        "condition_variable": "cpp",
+        "ratio": "cpp",
+        "mutex": "cpp",
+        "thread": "cpp",
+        "variant": "cpp",
+        "csignal": "cpp",
+        "cstring": "cpp"
     } // use number of cores for make -j
 }

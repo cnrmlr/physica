@@ -1,15 +1,18 @@
 #include <gtest/gtest.h>
 #include <physica/hypergraph.h>
 
-class Entity
+constexpr size_t OBJ_VALUE = 42;
+constexpr size_t EDGE_SIZE = 3;
+
+class Obj
 {
  public:
-   Entity() = default;
-   Entity(size_t val) : val(val) {}
-   size_t getVal() { return val; }
+   Obj() {}
+   Obj(size_t value) : value(value) {}
+   size_t get_value() { return value; }
 
  private:
-   size_t val;
+   size_t value;
 };
 
 namespace physica::test
@@ -17,110 +20,75 @@ namespace physica::test
 class HypergraphTest : public ::testing::Test
 {
  public:
-   HypergraphTest() : hypergraph_(nullptr) {}
+   HypergraphTest() {}
 
    ~HypergraphTest() {}
 
  protected:
-   std::unique_ptr<phys::hypergraph<Entity>> hypergraph_;
+   void SetUp() override {}
 
-   void SetUp() override { hypergraph_ = std::make_unique<phys::hypergraph<Entity>>(); }
-
-   void TearDown() override { hypergraph_.reset(); }
+   void TearDown() override {}
 };
 
-TEST_F(HypergraphTest, AddNode)
+TEST_F(HypergraphTest, MakeNodeWithArgs)
 {
-   std::weak_ptr<phys::node<Entity>> node = hypergraph_->add_node();
-
-   ASSERT_TRUE(node.lock());
-   ASSERT_EQ(hypergraph_->get_nodes().size(), 1);
-   ASSERT_EQ(hypergraph_->get_nodes().at(0).lock(), node.lock());
+   auto node = phys::make_node<Obj>(OBJ_VALUE);
+   EXPECT_EQ(node.data().get_value(), OBJ_VALUE);
 }
 
-TEST_F(HypergraphTest, RemoveNode)
+TEST_F(HypergraphTest, MakeNodeWith_lvalue)
 {
-   std::weak_ptr<phys::node<Entity>> node = hypergraph_->add_node();
-   hypergraph_->remove_node(node);
-
-   ASSERT_TRUE(node.expired());
-   ASSERT_TRUE(hypergraph_->get_nodes().empty());
+   Obj obj(OBJ_VALUE);
+   auto node = phys::make_node<Obj>(obj);
+   EXPECT_EQ(node.data().get_value(), obj.get_value());
 }
 
-TEST_F(HypergraphTest, AddNodes)
+TEST_F(HypergraphTest, MakeNodeWith_rvalue)
 {
-   std::vector<std::weak_ptr<phys::node<Entity>>> nodes = hypergraph_->add_nodes(3);
+   auto node = phys::make_node<Obj>(Obj(OBJ_VALUE));
+   EXPECT_EQ(node.data().get_value(), OBJ_VALUE);
+}
 
-   ASSERT_EQ(nodes.size(), 3);
-   ASSERT_EQ(hypergraph_->get_nodes().size(), 3);
+TEST_F(HypergraphTest, MakeHyperedgeWith_lvalue)
+{
+   auto nodes = std::vector<phys::node<Obj>>(EDGE_SIZE);
+   auto edge = phys::make_hyperedge<Obj>(nodes);
+   EXPECT_EQ(edge.nodes().size(), nodes.size());
 
-   for (size_t i = 0; i < nodes.size() && i < hypergraph_->get_nodes().size(); ++i)
+   for (size_t i = 0; i < EDGE_SIZE; ++i)
    {
-      ASSERT_TRUE(nodes.at(i).lock());
-      ASSERT_EQ(nodes.at(i).lock(), hypergraph_->get_nodes().at(i).lock());
+      EXPECT_EQ(edge.nodes().at(i), nodes.at(i));
    }
 }
 
-TEST_F(HypergraphTest, RemoveNodes)
+TEST_F(HypergraphTest, MakeHyperedgeWith_rvalue)
 {
-   std::vector<std::weak_ptr<phys::node<Entity>>> nodes = hypergraph_->add_nodes(3);
-   hypergraph_->remove_nodes(nodes);
-
-   ASSERT_TRUE(hypergraph_->get_nodes().empty());
-
-   for (auto &node : nodes)
-   {
-      ASSERT_TRUE(node.expired());
-   }
+   auto node_0 = phys::make_node<Obj>();
+   auto node_1 = phys::make_node<Obj>();
+   auto node_2 = phys::make_node<Obj>();
+   auto edge = phys::make_hyperedge<Obj>({node_0, node_1, node_2});
+   EXPECT_EQ(edge.nodes().size(), EDGE_SIZE);
+   EXPECT_EQ(edge.nodes().at(0), node_0);
+   EXPECT_EQ(edge.nodes().at(1), node_1);
+   EXPECT_EQ(edge.nodes().at(2), node_2);
 }
 
-TEST_F(HypergraphTest, AddEdge)
+TEST_F(HypergraphTest, MakeHypergraphWith_rvalue)
 {
-   std::vector<std::weak_ptr<phys::node<Entity>>> nodes = hypergraph_->add_nodes(3);
-   std::weak_ptr<phys::hyperedge<Entity>> edge          = hypergraph_->add_edge(nodes);
-
-   ASSERT_TRUE(edge.lock());
-   ASSERT_EQ(hypergraph_->get_edges().size(), 1);
-   ASSERT_EQ(hypergraph_->get_edges().at(0).lock(), edge.lock());
-
-   for (size_t i = 0; i < nodes.size() && i < edge.lock()->get_nodes().size(); ++i)
-   {
-      ASSERT_EQ(nodes.at(i).lock(), edge.lock()->get_nodes().at(i).lock());
-   }
+   auto edge_0 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
+   auto edge_1 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
+   auto graph = phys::make_hypergraph<Obj>({edge_0, edge_1});
+   EXPECT_EQ(graph.edges().at(0), edge_0);
+   EXPECT_EQ(graph.edges().at(1), edge_1);
 }
 
-TEST_F(HypergraphTest, RemoveEdge)
+TEST_F(HypergraphTest, MakeHypergraphWith_lvalue)
 {
-   std::vector<std::weak_ptr<phys::node<Entity>>> nodes = hypergraph_->add_nodes(3);
-   std::weak_ptr<phys::hyperedge<Entity>> edge          = hypergraph_->add_edge(nodes);
-   hypergraph_->remove_edge(edge);
-
-   ASSERT_TRUE(edge.expired());
-   ASSERT_TRUE(hypergraph_->get_edges().empty());
-}
-
-TEST_F(HypergraphTest, RemoveEdges)
-{
-   std::vector<std::weak_ptr<phys::node<Entity>>> nodeSet_1 = hypergraph_->add_nodes(3);
-   std::vector<std::weak_ptr<phys::node<Entity>>> nodeSet_2 = hypergraph_->add_nodes(3);
-
-   std::weak_ptr<phys::hyperedge<Entity>> edge_1 = hypergraph_->add_edge(nodeSet_1);
-   std::weak_ptr<phys::hyperedge<Entity>> edge_2 = hypergraph_->add_edge(nodeSet_2);
-
-   hypergraph_->remove_edges({edge_1, edge_2});
-
-   ASSERT_TRUE(edge_1.expired());
-   ASSERT_TRUE(edge_2.expired());
-   ASSERT_TRUE(hypergraph_->get_edges().empty());
-}
-
-TEST_F(HypergraphTest, AddSelfLoop)
-{
-   std::weak_ptr<phys::node<Entity>> node      = hypergraph_->add_node();
-   std::weak_ptr<phys::hyperedge<Entity>> edge = hypergraph_->add_edge({node, node});
-
-   ASSERT_EQ(edge.lock()->get_nodes().size(), 2);
-   ASSERT_EQ(node.lock()->get_incident_edges().size(), 1);
-   ASSERT_EQ(node.lock()->get_incident_edges().at(0).lock(), edge.lock());
+   auto edge_0 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
+   auto edge_1 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
+   std::vector<phys::hyperedge<Obj>> edges = {edge_0, edge_1};
+   auto graph = phys::make_hypergraph<Obj>(edges);
+   EXPECT_EQ(graph.edges().at(0), edge_0);
+   EXPECT_EQ(graph.edges().at(1), edge_1);
 }
 } // namespace physica::test
