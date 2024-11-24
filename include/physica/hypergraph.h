@@ -83,6 +83,12 @@ class hyperedge : public identifiable_base
 };
 
 template <class T>
+hyperedge<T> make_hyperedge()
+{
+   return hyperedge<T>();
+}
+
+template <class T>
 hyperedge<T> make_hyperedge(const std::vector<node<T>>& nodes)
 {
    return hyperedge<T>(nodes);
@@ -112,6 +118,12 @@ class hypergraph : identifiable_base
  private:
    std::vector<hyperedge<T>> edges_;
 };
+
+template <class T>
+hypergraph<T> make_hypergraph()
+{
+   return hypergraph<T>();
+}
 
 template <class T>
 hypergraph<T> make_hypergraph(const std::vector<hyperedge<T>>& edges)
