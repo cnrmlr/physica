@@ -8,7 +8,7 @@ class identifiable_base
 {
  public:
    identifiable_base() : uuid_(phys::uuid::generate()) {}
-   virtual ~identifiable_base()                = default;
+   ~identifiable_base()                        = default;
    identifiable_base(const identifiable_base&) = default;
    identifiable_base& operator=(const identifiable_base&) = default;
    identifiable_base(identifiable_base&&)                 = default;

@@ -43,7 +43,8 @@ class node : public identifiable_base
    T object_;
 };
 
-template <class T, class... Args>
+template <class T, class... Args,
+          typename = std::enable_if_t<std::is_constructible_v<T, Args&&...>>>
 node<T> make_node(Args&&... args)
 {
    return node<T>(std::forward<Args>(args)...);
@@ -72,8 +73,50 @@ class hyperedge : public identifiable_base
    {
    }
 
+   hyperedge()                 = default;
+   virtual ~hyperedge()        = default;
+   hyperedge(const hyperedge&) = default;
+   hyperedge& operator=(const hyperedge&) = default;
+   hyperedge(hyperedge&&)                 = default;
+   hyperedge& operator=(hyperedge&&) = default;
+
    std::vector<node<T>>& nodes() { return nodes_; }
    const std::vector<node<T>>& nodes() const { return nodes_; }
+
+   typename std::vector<node<T>>::iterator add_node(const node<T>& node)
+   {
+      return nodes_.push_back(node);
+   }
+
+   typename std::vector<node<T>>::reference add_node(node<T>&& node)
+   {
+      return nodes_.emplace_back(std::move(node));
+   }
+
+   template <class... Args, typename = std::enable_if_t<std::is_constructible_v<T, Args&&...>>>
+   typename std::vector<node<T>>::reference add_node(Args&&... args)
+   {
+      return nodes_.emplace_back(std::forward<Args>(args)...);
+   }
+
+   typename std::vector<node<T>>::iterator
+   insert_node(const typename std::vector<node<T>>::iterator& position, const node<T>& node)
+   {
+      return nodes_.insert(position, node);
+   }
+
+   typename std::vector<node<T>>::iterator
+   insert_node(const typename std::vector<node<T>>::iterator& position, node<T>&& node)
+   {
+      return nodes_.emplace(position, node);
+   }
+
+   template <class... Args, typename = std::enable_if_t<std::is_constructible_v<T, Args&&...>>>
+   typename std::vector<node<T>>::iterator
+   insert_node(const typename std::vector<node<T>>::iterator& position, Args&&... args)
+   {
+      return nodes_.emplace(position, std::forward<Args>(args)...);
+   }
 
    bool operator==(const hyperedge& rhs) const { return identifiable_base::operator==(rhs); }
    bool operator!=(const hyperedge& rhs) const { return !(*this == rhs); }

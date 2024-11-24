@@ -36,20 +36,20 @@ TEST_F(HypergraphTest, MakeNodeWithArgs)
    EXPECT_EQ(node.data().get_value(), OBJ_VALUE);
 }
 
-TEST_F(HypergraphTest, MakeNodeWith_lvalue)
+TEST_F(HypergraphTest, MakeNodeWithLValue)
 {
    Obj obj(OBJ_VALUE);
    auto node = phys::make_node<Obj>(obj);
    EXPECT_EQ(node.data().get_value(), obj.get_value());
 }
 
-TEST_F(HypergraphTest, MakeNodeWith_rvalue)
+TEST_F(HypergraphTest, MakeNodeWithRValue)
 {
    auto node = phys::make_node<Obj>(Obj(OBJ_VALUE));
    EXPECT_EQ(node.data().get_value(), OBJ_VALUE);
 }
 
-TEST_F(HypergraphTest, MakeHyperedgeWith_lvalue)
+TEST_F(HypergraphTest, MakeHyperedgeWithLValue)
 {
    auto nodes = std::vector<phys::node<Obj>>(EDGE_SIZE);
    auto edge  = phys::make_hyperedge<Obj>(nodes);
@@ -61,7 +61,7 @@ TEST_F(HypergraphTest, MakeHyperedgeWith_lvalue)
    }
 }
 
-TEST_F(HypergraphTest, MakeHyperedgeWith_rvalue)
+TEST_F(HypergraphTest, MakeHyperedgeWithRValue)
 {
    auto node_0 = phys::make_node<Obj>();
    auto node_1 = phys::make_node<Obj>();
@@ -73,7 +73,7 @@ TEST_F(HypergraphTest, MakeHyperedgeWith_rvalue)
    EXPECT_EQ(edge.nodes().at(2), node_2);
 }
 
-TEST_F(HypergraphTest, MakeHypergraphWith_rvalue)
+TEST_F(HypergraphTest, MakeHypergraphWithRValue)
 {
    auto edge_0 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
    auto edge_1 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
@@ -82,7 +82,7 @@ TEST_F(HypergraphTest, MakeHypergraphWith_rvalue)
    EXPECT_EQ(graph.edges().at(1), edge_1);
 }
 
-TEST_F(HypergraphTest, MakeHypergraphWith_lvalue)
+TEST_F(HypergraphTest, MakeHypergraphWithLValue)
 {
    auto edge_0 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
    auto edge_1 = phys::make_hyperedge<Obj>({phys::node<Obj>(), phys::node<Obj>()});
@@ -90,5 +90,73 @@ TEST_F(HypergraphTest, MakeHypergraphWith_lvalue)
    auto graph                              = phys::make_hypergraph<Obj>(edges);
    EXPECT_EQ(graph.edges().at(0), edge_0);
    EXPECT_EQ(graph.edges().at(1), edge_1);
+}
+
+TEST_F(HypergraphTest, AddNodeToEdgeWithArgs)
+{
+   auto edge = phys::make_hyperedge<Obj>();
+   auto node = edge.add_node(OBJ_VALUE);
+   EXPECT_EQ(node.data().get_value(), OBJ_VALUE);
+   EXPECT_EQ(edge.nodes().size(), 1);
+}
+
+TEST_F(HypergraphTest, AddNodeToEdgeWithLValue)
+{
+   auto edge = phys::make_hyperedge<Obj>();
+   Obj obj(OBJ_VALUE);
+   auto node = edge.add_node(obj);
+   EXPECT_EQ(node.data().get_value(), OBJ_VALUE);
+   EXPECT_EQ(edge.nodes().size(), 1);
+}
+
+TEST_F(HypergraphTest, AddNodeToEdgeWithRValue)
+{
+   auto edge = phys::make_hyperedge<Obj>();
+   auto node = edge.add_node(Obj(OBJ_VALUE));
+   EXPECT_EQ(node.data().get_value(), OBJ_VALUE);
+   EXPECT_EQ(edge.nodes().size(), 1);
+}
+
+TEST_F(HypergraphTest, InsertNodeOnEdgeWithArgs)
+{
+   auto edge = phys::make_hyperedge<Obj>();
+   edge.add_node(1);
+   auto it = edge.insert_node(edge.nodes().begin(), OBJ_VALUE);
+   EXPECT_EQ(it->data().get_value(), OBJ_VALUE);
+   EXPECT_EQ(edge.nodes().size(), 2);
+   EXPECT_EQ(edge.nodes().front().data().get_value(), OBJ_VALUE);
+}
+
+TEST_F(HypergraphTest, InsertNodeOnEdgeWithLValue)
+{
+   auto edge = phys::make_hyperedge<Obj>();
+   edge.add_node(1); // Add a node first
+   Obj obj(OBJ_VALUE);
+   auto it = edge.insert_node(edge.nodes().begin(), obj);
+   EXPECT_EQ(it->data().get_value(), OBJ_VALUE);
+   EXPECT_EQ(edge.nodes().size(), 2);
+   EXPECT_EQ(edge.nodes().front().data().get_value(), OBJ_VALUE);
+}
+
+TEST_F(HypergraphTest, InsertNodeOnEdgeWithRValue)
+{
+   auto edge = phys::make_hyperedge<Obj>();
+   edge.add_node(1); // Add a node first
+   auto it = edge.insert_node(edge.nodes().begin(), Obj(OBJ_VALUE));
+   EXPECT_EQ(it->data().get_value(), OBJ_VALUE);
+   EXPECT_EQ(edge.nodes().size(), 2);
+   EXPECT_EQ(edge.nodes().front().data().get_value(), OBJ_VALUE);
+}
+
+TEST_F(HypergraphTest, AddMultipleNodesToEdgeWithArgs)
+{
+   auto edge = phys::make_hyperedge<Obj>();
+   edge.add_node(1);
+   edge.add_node(2);
+   edge.add_node(3);
+   EXPECT_EQ(edge.nodes().size(), 3);
+   EXPECT_EQ(edge.nodes().at(0).data().get_value(), 1);
+   EXPECT_EQ(edge.nodes().at(1).data().get_value(), 2);
+   EXPECT_EQ(edge.nodes().at(2).data().get_value(), 3);
 }
 } // namespace physica::test
