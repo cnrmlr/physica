@@ -14,8 +14,8 @@ class Rule
  public:
    Rule();
    ~Rule();
-   Rule(const Rule &rhs);
-   Rule &operator=(const Rule &rhs);
+   Rule(const Rule& rhs);
+   Rule& operator=(const Rule& rhs);
 
    Rule(std::vector<AbstractRelation> pattern, std::vector<AbstractRelation> replace);
 

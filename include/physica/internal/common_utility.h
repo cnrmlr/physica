@@ -11,7 +11,7 @@ namespace phys::internal
 // conatiner.end() is returned.
 template <class T>
 typename std::vector<std::shared_ptr<T>>::iterator
-find_with_weak_ptr(std::vector<std::shared_ptr<T>> &sharedVector, const std::weak_ptr<T> &value)
+find_with_weak_ptr(std::vector<std::shared_ptr<T>>& sharedVector, const std::weak_ptr<T>& value)
 {
    auto iter = sharedVector.end();
 
@@ -28,12 +28,12 @@ find_with_weak_ptr(std::vector<std::shared_ptr<T>> &sharedVector, const std::wea
 // objects.
 template <class T>
 std::vector<std::weak_ptr<T>>
-make_weak_ptr_vector(const std::vector<std::shared_ptr<T>> &sharedVector)
+make_weak_ptr_vector(const std::vector<std::shared_ptr<T>>& sharedVector)
 {
    std::vector<std::weak_ptr<T>> weakVector;
    weakVector.reserve(sharedVector.size());
 
-   for (const auto &element : sharedVector)
+   for (const auto& element : sharedVector)
    {
       weakVector.emplace_back(element);
    }
@@ -46,12 +46,12 @@ make_weak_ptr_vector(const std::vector<std::shared_ptr<T>> &sharedVector)
 // abort and return an empty vector.
 template <class T>
 std::vector<std::shared_ptr<T>>
-make_shared_ptr_vector(const std::vector<std::weak_ptr<T>> &weakVector)
+make_shared_ptr_vector(const std::vector<std::weak_ptr<T>>& weakVector)
 {
    std::vector<std::shared_ptr<T>> sharedVector;
    sharedVector.reserve(weakVector.size());
 
-   for (auto &element : weakVector)
+   for (auto& element : weakVector)
    {
       if (auto sharedElement = element.lock())
       {

@@ -41,7 +41,7 @@ int main()
    {
       auto node = phys::make_node<Obj>(42);
 
-      Obj obj = node.data(); // extract object from node
+      Obj obj              = node.data(); // extract object from node
       const phys::uuid& id = node.uuid(); // read the node's unique identifier
    }
 

@@ -15,13 +15,13 @@ class uuid
 
    ~uuid() = default;
 
-   uuid(const uuid &rhs)
+   uuid(const uuid& rhs)
       : mostSignificantBits_(rhs.mostSignificantBits_),
         leastSignificantBits_(rhs.leastSignificantBits_)
    {
    }
 
-   uuid &operator=(const uuid &rhs)
+   uuid& operator=(const uuid& rhs)
    {
       if (this != &rhs)
       {
@@ -37,7 +37,7 @@ class uuid
       set(mostSignificantBits, leastSignificantBits);
    }
 
-   uuid(const std::string &stringuuid)
+   uuid(const std::string& stringuuid)
    {
       if (!parse_stringified_uuid(stringuuid))
       {
@@ -79,13 +79,13 @@ class uuid
       return uuid;
    }
 
-   bool operator==(const uuid &rhs) const
+   bool operator==(const uuid& rhs) const
    {
       return (mostSignificantBits_ == rhs.mostSignificantBits_) &&
              (leastSignificantBits_ == rhs.leastSignificantBits_);
    }
 
-   bool operator!=(const uuid &rhs) const
+   bool operator!=(const uuid& rhs) const
    {
       return (mostSignificantBits_ != rhs.mostSignificantBits_) ||
              (leastSignificantBits_ != rhs.leastSignificantBits_);
@@ -95,7 +95,7 @@ class uuid
    size_t mostSignificantBits_;
    size_t leastSignificantBits_;
 
-   bool parse_stringified_uuid(const std::string &stringuuid)
+   bool parse_stringified_uuid(const std::string& stringuuid)
    {
       if (stringuuid.size() == 36 || stringuuid[8] == '-' || stringuuid[13] == '-' ||
           stringuuid[18] == '-' || stringuuid[23] == '-')
@@ -120,7 +120,7 @@ class uuid
 
             return true;
          }
-         catch (const std::exception &)
+         catch (const std::exception&)
          {
             return false;
          }

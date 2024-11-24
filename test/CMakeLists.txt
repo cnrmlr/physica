@@ -1,15 +1,25 @@
 cmake_minimum_required(VERSION 3.16)
 
+project(physica-tests)
+
+# Add GoogleTest
 add_subdirectory(googletest)
 
-function(addTest TEST_NAME TEST_SOURCE)
-  add_executable(${TEST_NAME} ${TEST_SOURCE})
-  target_link_libraries(${TEST_NAME} gtest_main physica)
-  add_test(${TEST_NAME} ${TEST_NAME})
-  target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
-endfunction()
-
+# Add include directories for headers
+include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(./googletest/googletest/)
-include_directories(PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-addTest(test-hypergraph test_hypergraph.cpp)
+# List all test source files
+set(TEST_SOURCES
+    test_hypergraph.cpp
+    main.cpp
+)
+
+# Add the test executable
+add_executable(physica-tests ${TEST_SOURCES})
+
+# Link GoogleTest and other required libraries
+target_link_libraries(physica-tests PRIVATE gtest_main)
+
+# Add tests to CTest
+add_test(NAME physica-tests COMMAND physica-tests)

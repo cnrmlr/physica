@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Define the directory to search
+PROJECT_DIR=$(pwd)
+
+# Find all relevant files (C++ source and headers) excluding the `test/googletest/` directory
+find "$PROJECT_DIR" \( -path "$PROJECT_DIR/test/googletest" -prune \) -o \
+    \( -name "*.cpp" -o -name "*.h" \) -print | xargs clang-format -i
+
+echo "Code formatted successfully."
+
 # Default build type
 BUILD_TYPE="Release"
 
@@ -31,21 +40,8 @@ cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ..
 # Build the project
 cmake --build . --config "$BUILD_TYPE"
 
-# Navigate back to the root directory
-cd ..
-
-# Build the tests
-mkdir -p "$TEST_BUILD_DIR"
-cd "$TEST_BUILD_DIR" || exit
-
-# Run CMake to configure the tests
-cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ../../test
-
-# Build the test targets
-cmake --build . --config "$BUILD_TYPE"
-
 # Run the tests
-ctest --output-on-failure
+ctest --output-on-failure --verbose
 
 # Return to the root directory
 cd ../..
